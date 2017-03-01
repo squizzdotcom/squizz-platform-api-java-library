@@ -11,3 +11,12 @@ If you are a software developer writing a Java application then we recommend tha
 - You can find more information about the SQUIZZ.com platform by visiting [https://www.squizz.com/docs/squizz](https://www.squizz.com/docs/squizz)
 - To find more information about developing software for the SQUIZZ.com visit [https://www.squizz.com/docs/squizz/Integrate-Software-Into-SQUIZZ.com-Platform.html](https://www.squizz.com/docs/squizz/Integrate-Software-Into-SQUIZZ.com-Platform.html)
 - To find more information about the platform's API visit [https://www.squizz.com/docs/squizz/Platform-API.html](https://www.squizz.com/docs/squizz/Platform-API.html)
+
+##Getting Started##
+
+To get started using the library within Java applications, download and reference the JAR library to your application using your most preferred way.
+To use the library within a Java class using the following import syntax:
+
+```
+import org.squizz.api.v1.*;
+```
