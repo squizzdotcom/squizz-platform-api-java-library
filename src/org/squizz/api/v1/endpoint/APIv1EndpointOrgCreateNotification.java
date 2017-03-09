@@ -43,12 +43,12 @@ public class APIv1EndpointOrgCreateNotification
      * @param linkLabels ordered array of labels to replace in each of the place holders of the message. Set empty strings to ignore placing values into place holders
      * @return response from calling the API endpoint
      */
-    public static APIv1EndpointResponse call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, String notifyCategory, String message, String[] linkURLs, String[] linkLabels)
+    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, String notifyCategory, String message, String[] linkURLs, String[] linkLabels)
     {
         String endpointParams = "";
-        ArrayList<Pair<String, String>> requestHeaders = new ArrayList<Pair<String, String>>();
-        requestHeaders.add(new Pair<String, String>(APIv1HTTPRequest.HTTP_HEADER_CONTENT_TYPE, APIv1HTTPRequest.HTTP_HEADER_CONTENT_TYPE_FORM_URL_ENCODED));
-        APIv1EndpointResponse endpointResponse = new APIv1EndpointResponse();
+        ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
+        requestHeaders.add(new Pair<>(APIv1HTTPRequest.HTTP_HEADER_CONTENT_TYPE, APIv1HTTPRequest.HTTP_HEADER_CONTENT_TYPE_FORM_URL_ENCODED));
+        APIv1EndpointResponseESD endpointResponse = new APIv1EndpointResponseESD();
         
         try{
             String linkURLParams = "";
@@ -77,7 +77,7 @@ public class APIv1EndpointOrgCreateNotification
             ObjectReader endpointJSONReader = jsonMapper.readerFor(APIv1EndpointResponse.class);
             
             //make a HTTP request to the platform's API endpoint to create the organisation notifications
-            endpointResponse = APIv1HTTPRequest.<APIv1EndpointResponse>sendHTTPRequest(APIv1Constants.HTTP_REQUEST_METHOD_POST, APIv1Constants.API_ORG_ENDPOINT_CREATE_NOTIFCATION+APIv1Constants.API_PATH_SLASH+apiOrgSession.getSessionID(), endpointParams, requestHeaders, requestPostBody, endpointTimeoutMilliseconds, apiOrgSession.getLangBundle(), endpointJSONReader, endpointResponse);
+            endpointResponse = APIv1HTTPRequest.sendESDocumentHTTPRequest(APIv1Constants.HTTP_REQUEST_METHOD_POST, APIv1Constants.API_ORG_ENDPOINT_CREATE_NOTIFCATION+APIv1Constants.API_PATH_SLASH+apiOrgSession.getSessionID(), endpointParams, requestHeaders, requestPostBody, null, endpointTimeoutMilliseconds, apiOrgSession.getLangBundle(), endpointJSONReader, endpointResponse);
             
             //check that the notification were successfully sent
             if(!endpointResponse.result.equalsIgnoreCase(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS))

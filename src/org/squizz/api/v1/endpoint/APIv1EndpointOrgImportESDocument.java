@@ -9,8 +9,6 @@ package org.squizz.api.v1.endpoint;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import org.squizz.api.v1.APIv1Constants;
@@ -51,10 +49,10 @@ public class APIv1EndpointOrgImportESDocument
      * @param esDocument Ecommerce Standards Document that contains records and data to to upload. Ensure the document matches the import type given
      * @return response from calling the API endpoint
      */
-    public static APIv1EndpointResponse call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, int importTypeID, ESDocument esDocument)
+    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, int importTypeID, ESDocument esDocument)
     {
-        ArrayList<Pair<String, String>> requestHeaders = new ArrayList<Pair<String, String>>();
-        APIv1EndpointResponse endpointResponse = new APIv1EndpointResponse();
+        ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
+        APIv1EndpointResponseESD endpointResponse = new APIv1EndpointResponseESD();
         
         try{
             //set notification parameters
@@ -66,7 +64,7 @@ public class APIv1EndpointOrgImportESDocument
             ObjectReader endpointJSONReader = jsonMapper.readerFor(APIv1EndpointResponse.class);
             
             //make a HTTP request to the platform's API endpoint to push the ESDocument data up
-            endpointResponse = APIv1HTTPRequest.<APIv1EndpointResponse>postESDocumentHTTPRequest(APIv1Constants.API_ORG_ENDPOINT_IMPORT_ESD+APIv1Constants.API_PATH_SLASH+apiOrgSession.getSessionID(), endpointParams, requestHeaders, esDocument, endpointTimeoutMilliseconds, apiOrgSession.getLangBundle(), endpointJSONReader, endpointResponse);
+            endpointResponse = APIv1HTTPRequest.sendESDocumentHTTPRequest(APIv1Constants.HTTP_REQUEST_METHOD_POST, APIv1Constants.API_ORG_ENDPOINT_IMPORT_ESD+APIv1Constants.API_PATH_SLASH+apiOrgSession.getSessionID(), endpointParams, requestHeaders, "", esDocument, endpointTimeoutMilliseconds, apiOrgSession.getLangBundle(), endpointJSONReader, endpointResponse);
             
             //check that the data was successfully pushed up
             if(!endpointResponse.result.equalsIgnoreCase(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS))

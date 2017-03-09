@@ -6,6 +6,9 @@
 */
 package org.squizz.api.v1.endpoint;
 
+import EcommerceStandardsDocuments.ESDocument;
+import EcommerceStandardsDocuments.ESDocumentOrderPurchase;
+import EcommerceStandardsDocuments.ESDocumentOrderSale;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -16,42 +19,40 @@ import javafx.util.Pair;
 import org.squizz.api.v1.APIv1Constants;
 import org.squizz.api.v1.APIv1HTTPRequest;
 import org.squizz.api.v1.APIv1OrgSession;
-import static org.squizz.api.v1.endpoint.APIv1EndpointOrgCreateNotification.MAX_MESSAGE_PLACEHOLDERS;
 
 /**
- * Class handles calling the SQUIZZ.com API endpoint for verifying a security certificate created for an organisation within the platform. 
- * Security certificates are used to secure organisational data transferred across the Internet and computer networks
+ * Class handles calling the SQUIZZ.com API endpoint to send one more of an organisation's purchase orders into the platform, where they are then converted into sales orders and sent to a supplier organisation for processing and dispatch.
+ * This endpoint allows goods and services to be purchased by the "customer" organisation logged into the API session from their chosen supplier organisation
  */
-public class APIv1EndpointOrgValidateSecurityCertificate 
+public class APIv1EndpointOrgProcurePurchaseOrderFromSupplier 
 {
     /**
-     * Calls the platform's API endpoint to validate the organisation's security certificate
-     * The public Internet connection used to call the endpoint will be used to validate against the domain or IP address set for the security certificate
+     * Calls the platform's API endpoint and pushes up and import organisation data in a Ecommerce Standards Document of a specified type
      * @param apiOrgSession existing organisation API session
      * @param endpointTimeoutMilliseconds amount of milliseconds to wait after calling the the API before giving up, set a positive number
-     * @param orgSecurityCertificateID ID of the orgnisation's security certificate in the platform
+     * @param supplierOrgID unique ID of the supplier organisation in the SQUIZZ.com platform
+     * @param customerAccountCode code of the supplier organisation's customer account. Customer account only needs to be set if the supplier organisation has assigned multiple accounts to the organisation logged into the API session (customer org)
+     * @param esDocumentOrderPurchase Purchase Order Ecommerce Standards Document that contains one or more purchase order records
      * @return response from calling the API endpoint
      */
-    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, String orgSecurityCertificateID)
+    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, String supplierOrgID, String customerAccountCode, ESDocumentOrderPurchase esDocumentOrderPurchase)
     {
-        String endpointParams = "";
         ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
-        requestHeaders.add(new Pair<>(APIv1HTTPRequest.HTTP_HEADER_CONTENT_TYPE, APIv1HTTPRequest.HTTP_HEADER_CONTENT_TYPE_FORM_URL_ENCODED));
         APIv1EndpointResponseESD endpointResponse = new APIv1EndpointResponseESD();
         
         try{
             //set notification parameters
-            String requestPostBody = "org_security_certificate_id="+URLEncoder.encode(orgSecurityCertificateID, StandardCharsets.UTF_8.name());
+            String endpointParams = "supplier_org_id="+ URLEncoder.encode(supplierOrgID, StandardCharsets.UTF_8.name()) + "&customer_account_code="+URLEncoder.encode(customerAccountCode, StandardCharsets.UTF_8.name());
             
             //create JSON deserializer to interpret the response from the endpoint
             ObjectMapper jsonMapper = new ObjectMapper();
             jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            ObjectReader endpointJSONReader = jsonMapper.readerFor(APIv1EndpointResponse.class);
+            ObjectReader endpointJSONReader = jsonMapper.readerFor(ESDocumentOrderSale.class);
             
-            //make a HTTP request to the platform's API endpoint to validate the security certificate
-            endpointResponse = APIv1HTTPRequest.sendESDocumentHTTPRequest(APIv1Constants.HTTP_REQUEST_METHOD_POST, APIv1Constants.API_ORG_ENDPOINT_VALIDATE_CERT+APIv1Constants.API_PATH_SLASH+apiOrgSession.getSessionID(), endpointParams, requestHeaders, requestPostBody, null, endpointTimeoutMilliseconds, apiOrgSession.getLangBundle(), endpointJSONReader, endpointResponse);
+            //make a HTTP request to the platform's API endpoint to send the ESD containing the purchase orders
+            endpointResponse = APIv1HTTPRequest.sendESDocumentHTTPRequest(APIv1Constants.HTTP_REQUEST_METHOD_POST, APIv1Constants.API_ORG_ENDPOINT_PROCURE_PURCHASE_ORDER_FROM_SUPPLIER+APIv1Constants.API_PATH_SLASH+apiOrgSession.getSessionID(), endpointParams, requestHeaders, "", esDocumentOrderPurchase, endpointTimeoutMilliseconds, apiOrgSession.getLangBundle(), endpointJSONReader, endpointResponse);
             
-            //check that the notification were successfully sent
+            //check that the data was successfully pushed up
             if(!endpointResponse.result.equalsIgnoreCase(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS))
             {
                 //check if the session still exists

@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
  * Entry point to run testing of version 1 of the SQUIZZ.com platform API library for organisations
  */
 public class APIv1OrgTestRunner {
-    public static final String CONSOLE_LINE = "==============================================";
+    public static final String CONSOLE_LINE = "===========================================================";
     
     public static void main(String[] args)
     {
@@ -22,9 +22,15 @@ public class APIv1OrgTestRunner {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         
         System.out.println(CONSOLE_LINE);
-        System.out.println("    SQUIZZ.com - The Connected Marketplace");
+        System.out.println("   _____ ____  __  ________________    __________  __  ___");
+        System.out.println("  / ___// __ \\/ / / /  _/__  /__  /   / ____/ __ \\/  |/  /");
+        System.out.println("  \\__ \\/ / / / / / // /   / /  / /   / /   / / / / /|_/ /");
+        System.out.println(" ___/ / /_/ / /_/ // /   / /__/ /___/ /___/ /_/ / /  / /");
+        System.out.println("/____/\\___\\_\\____/___/  /____/____(_)____/\\____/_/  /_/");
         System.out.println(CONSOLE_LINE);
-        System.out.println("               SQUIZZ Pty Ltd");
+        System.out.println("          SQUIZZ.com - The Connected Marketplace");
+        System.out.println(CONSOLE_LINE);
+        System.out.println("                   SQUIZZ Pty Ltd");
         System.out.println(CONSOLE_LINE);
         System.out.println("Testing SQUIZZ.com API Java Library: version 1");
         System.out.println(CONSOLE_LINE);
@@ -68,6 +74,13 @@ public class APIv1OrgTestRunner {
                 testNotify = reader.readLine();
                 if(testNotify.equalsIgnoreCase(ESDocumentConstants.ESD_VALUE_YES)){
                     APIv1OrgEndpointTest.testEndpointOrgImportESDocument(testNumber++, apiOrgSession);
+                }
+                
+                //test importing and procuring purchase order from supplier
+                System.out.println("Test Procuring Purchase Order From Supplier ("+ESDocumentConstants.ESD_VALUE_YES+" or "+ESDocumentConstants.ESD_VALUE_NO+"):");
+                testNotify = reader.readLine();
+                if(testNotify.equalsIgnoreCase(ESDocumentConstants.ESD_VALUE_YES)){
+                    APIv1OrgEndpointTest.testEndpointOrgProcurePurchaseOrderFromSupplier(testNumber++, apiOrgSession);
                 }
             }catch(Exception ex){
                 System.out.println("Unable to read line.");

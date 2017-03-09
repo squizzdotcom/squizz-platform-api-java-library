@@ -7,43 +7,60 @@
 package org.squizz.api.v1;
 
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import EcommerceStandardsDocuments.ESDocumentConstants;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
 import javafx.util.Pair;
-import org.squizz.api.v1.lang.APIv1LangBundle_en_AU;
 
 /**
  * Represents a session created within the API of the SQUIZZ.com platform for an organisation
  */
 public class APIv1OrgSession 
 {
+    /**
+     * ID of the session within the platform's API
+     */
     private String sessionID = "";
+    
+    /**
+     * version of the API that responses are returned from
+     */
     private String apiVersion = "";
+    
+    /**
+     * ID of the organisation logged into the API session
+     */
     private String orgID = "";
+    
+    /**
+     * API key of the organisation logged into the API session
+     */
     private String apiOrgKey = "";
+    
+    /**
+     * API password of the organisation logged into the API session
+     */
     private String apiOrgPassword = "";
+    
+    /**
+     * amount of milliseconds by default to timeout requests to the API if no response is returned
+     */
     private int defaultRequestTimeoutMilliseconds = 10000;
+    
+    /**
+     * if true then a session has been created in the platform's API
+     */
     private Boolean sessionExists = false;
+    
+    /**
+     * resource bundle to control the language that messages in the API are displayed in
+     */
     private ResourceBundle langBundle = null;
     
     /**
