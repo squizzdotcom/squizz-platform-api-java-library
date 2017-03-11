@@ -25,7 +25,7 @@ import org.squizz.api.v1.*;
 To start using the SQUIZZ.com platform's API a session must first be created. A session can only be created after credentials for a specified organisation have been given to the API and have been validated.
 Once the session has been created then all other endpoints in the API can be called.
 
-...
+```
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
@@ -57,4 +57,4 @@ public class ExampleRunner {
 		}
     }
 }
-...
+```
