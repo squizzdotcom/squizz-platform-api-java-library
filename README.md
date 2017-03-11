@@ -20,3 +20,41 @@ To use the library within a Java class using the following import syntax:
 ```
 import org.squizz.api.v1.*;
 ```
+
+##Create API Session Endpoint##
+To start using the SQUIZZ.com platform's API a session must first be created. A session can only be created after credentials for a specified organisation have been given to the API and have been validated.
+Once the session has been created then all other endpoints in the API can be called.
+
+...
+import org.squizz.api.v1.*;
+import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
+import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
+
+public class ExampleRunner {
+	public static void main(String[] args)
+    {
+		//obtain or load in an organisation's API credentials, in this example from command line arguments
+		String orgID = args[0];
+		String orgAPIKey = args[1];
+		String orgAPIPass = args[2];
+		
+		//create an API session instance
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		
+		//call the platform's API to request that a session is created
+		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
+		
+		//check if the organisation's credentials were correct and that a session was created in the platform's API
+		if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS))
+		{
+			//session has been created so now can call other API endpoints
+			System.out.println("SUCCESS - API session has successfully been created.");
+		}
+		else
+		{
+			//session failed to be created
+			System.out.println("FAIL - API session failed to be created. Reason: " + endpointResponse.result_message  + " Error Code: " + endpointResponse.result_code);
+		}
+    }
+}
+...
