@@ -58,7 +58,7 @@ public class APIv1OrgEndpointTest
             System.out.println("Call API to send organisation notification");
             APIv1EndpointResponseESD endpointResponse = APIv1EndpointOrgCreateNotification.call(apiOrgSession, timeoutMilliseconds, notifyCategory, message, linkURLs, linkLabels);
             
-            //check the result of validating the session
+            //check the result of creating the organisation notification
             if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
                 System.out.println("SUCCESS - organisation notification successfully created in the platform");
                 System.out.println("Session ID - " + apiOrgSession.getSessionID());
