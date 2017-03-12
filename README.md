@@ -25,7 +25,7 @@ import org.squizz.api.v1.*;
 To start using the SQUIZZ.com platform's API a session must first be created. A session can only be created after credentials for a specified organisation have been given to the API and have been verified.
 Once the session has been created then all other endpoints in the API can be called.
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
@@ -70,7 +70,7 @@ This can be used to advise such people of events happening external to the platf
 See the example below on how the call the Create Organisation Notification endpoint. Note that a session must first be created in the API before calling the endpoint.
 
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
 import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
@@ -145,7 +145,7 @@ For example if 3 products are imported, then a another products import is run th
 
 See the example below on how the call the Import Organisation ESD Data endpoint. Note that a session must first be created in the API before calling the endpoint.
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
 import org.esd.EcommerceStandardsDocuments.*;
@@ -250,7 +250,7 @@ It is recommended to only import one purchase order at a time, since if an array
 See the example below on how the call the Send and Procure Purchase order From Supplier endpoint. Note that a session must first be created in the API before calling the endpoint.
 
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
 import org.esd.EcommerceStandardsDocuments.*;
@@ -461,7 +461,7 @@ public class ExampleRunner
 After a session has been created with SQUIZZ.com platform's API, if the same session is persistently being used over a long period time, then its worth validating that the session has not been destroyed by the API.
 The SQUIZZ.com platform's API will automatically expire and destory sessions that have existed for a long period of time.
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
@@ -516,7 +516,7 @@ public class ExampleRunner
 After a session has been created with SQUIZZ.com platform's API, if the same session is persistently being used over a long period time, then a helper method in the library can be used to check if the API session is still valid, then if not have a new session be created.
 The SQUIZZ.com platform's API will automatically expire and destory sessions that have existed for a long period of time.
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
@@ -570,7 +570,7 @@ public class ExampleRunner
 
 After a session has been created with SQUIZZ.com platform's API, if after calling other endpoints there no need for the session anymore, then it's advisable to destroy the session as soon as possible.
 
-```
+```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
