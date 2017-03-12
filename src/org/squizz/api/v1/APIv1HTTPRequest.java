@@ -7,7 +7,7 @@
 package org.squizz.api.v1;
 
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
-import EcommerceStandardsDocuments.ESDocumentConstants;
+import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import EcommerceStandardsDocuments.*;
+import org.esd.EcommerceStandardsDocuments.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponseESD;
 

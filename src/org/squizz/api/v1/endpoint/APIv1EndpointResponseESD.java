@@ -5,7 +5,7 @@
 * You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 package org.squizz.api.v1.endpoint;
-import EcommerceStandardsDocuments.ESDocument;
+import org.esd.EcommerceStandardsDocuments.ESDocument;
 import static org.squizz.api.v1.endpoint.APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_UNKNOWN;
 import static org.squizz.api.v1.endpoint.APIv1EndpointResponse.ENDPOINT_RESULT_FAILURE;
 

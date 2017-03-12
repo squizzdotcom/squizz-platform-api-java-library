@@ -24,6 +24,7 @@ import org.squizz.api.v1.*;
 ##Create Organisation API Session Endpoint##
 To start using the SQUIZZ.com platform's API a session must first be created. A session can only be created after credentials for a specified organisation have been given to the API and have been verified.
 Once the session has been created then all other endpoints in the API can be called.
+Read [https://www.squizz.com/docs/squizz/Platform-API.html#section840](https://www.squizz.com/docs/squizz/Platform-API.html#section840) for more documentation about the endpoint.
 
 ```java
 import org.squizz.api.v1.*;
@@ -38,9 +39,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -68,12 +70,12 @@ public class ExampleRunner
 The SQUIZZ.com platform's API has an endpoint that allows organisation notifications to be created in the platform. allowing people assigned to an organisation's notification category to receive a notification. 
 This can be used to advise such people of events happening external to the platform, such as sales, enquires, tasks completed through websites and other software.
 See the example below on how the call the Create Organisation Notification endpoint. Note that a session must first be created in the API before calling the endpoint.
+Read [https://www.squizz.com/docs/squizz/Platform-API.html#section854](https://www.squizz.com/docs/squizz/Platform-API.html#section854) for more documentation about the endpoint.
 
 
 ```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
-import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 
 public class ExampleRunner 
 {
@@ -83,9 +85,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -103,7 +106,7 @@ public class ExampleRunner
 		}
 		
 		//create organisation notification if the API was successfully created
-		if(apiOrgSession.sessionExists)
+		if(apiOrgSession.sessionExists())
 		{
 			//set the notification category that the organisation will display under in the platform, in this case the sales order category
 			String notifyCategory = APIv1EndpointOrgCreateNotification.NOTIFY_CATEGORY_ORDER_SALE;
@@ -124,7 +127,7 @@ public class ExampleRunner
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
                 System.out.println("SUCCESS - organisation notification successfully created in the platform");
             }else{
-                System.out.println("FAIL - organisation notification failed to be created. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code");
+                System.out.println("FAIL - organisation notification failed to be created. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
             }
 		}
 		
@@ -142,13 +145,15 @@ This data is used to allow the organisation to buy and sell products, as well ma
 Each type of data needs to be imported as an "Ecommerce Standards Document" that contains one or more records. Use the Ecommerce Standards library to easily create these documents and records.
 When importing one type of organisational data, it is important to import the full data set, otherwise the platform will deactivate unimported data.
 For example if 3 products are imported, then a another products import is run that only imports 2 records, then 1 product will become deactivated and no longer be able to be sold.
-
+Read [https://www.squizz.com/docs/squizz/Platform-API.html#section843](https://www.squizz.com/docs/squizz/Platform-API.html#section843) for more documentation about the endpoint and its requirements.
 See the example below on how the call the Import Organisation ESD Data endpoint. Note that a session must first be created in the API before calling the endpoint.
 
 ```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
 import org.esd.EcommerceStandardsDocuments.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ExampleRunner 
 {
@@ -158,9 +163,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -178,10 +184,10 @@ public class ExampleRunner
 		}
 		
 		//import organisation data if the API was successfully created
-		if(apiOrgSession.sessionExists)
+		if(apiOrgSession.sessionExists())
 		{
 			//create taxcode records
-            ArrayList<ESDRecordTaxcode> taxcodeRecords = new ArrayList<ESDRecordTaxcode>();
+            ArrayList<ESDRecordTaxcode> taxcodeRecords = new ArrayList<>();
             ESDRecordTaxcode taxcodeRecord = new ESDRecordTaxcode();
             taxcodeRecord.keyTaxcodeID = "1";
             taxcodeRecord.taxcode = "GST";
@@ -207,7 +213,7 @@ public class ExampleRunner
             taxcodeRecords.add(taxcodeRecord);
             
             //create a hashmap containing configurations of the organisation taxcode data
-            HashMap<String, String> configs = new HashMap<String, String>();
+            HashMap<String, String> configs = new HashMap<>();
             
             //add a dataFields attribute that contains a comma delimited list of tacode record fields that the API is allowed to insert, update in the platform
             configs.put("dataFields", "keyTaxcodeID,taxcode,taxcodeLabel,description,taxcodePercentageRate");
@@ -225,7 +231,7 @@ public class ExampleRunner
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
                 System.out.println("SUCCESS - organisation data successfully imported into the platform");
             }else{
-                System.out.println("FAIL - organisation data successfully imported into the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code");
+                System.out.println("FAIL - organisation data successfully imported into the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
             }
 		}
 		
@@ -238,7 +244,7 @@ public class ExampleRunner
 
 ##Send and Procure Purchase Order From Supplier Endpoint##
 
-The SQUIZZ.com platform's API has an endpoint that allows an orgnisation to import a purchase order. and have it procured/converted into sales order of a designated supplier organisation. 
+The SQUIZZ.com platform's API has an endpoint that allows an orgnisation to import a purchase order. and have it procured/converted into a sales order of a designated supplier organisation. 
 This endpoint allows a customer organisation to commit to buy goods and services of an organisation, and have the order processed, and delivered by the supplier organisation.
 The endpoint relies upon a connection first being made between organisations within the SQUIZZ.com platform.
 The endpoint relies upon being able to find matching supplier products as what has been ordered.
@@ -246,7 +252,7 @@ The endpoint has a number of other requirements. See the endpoint documentation 
 
 Each purchase order needs to be imported within a "Ecommerce Standards Document" that contains a record for each purchase order. Use the Ecommerce Standards library to easily create these documents and records.
 It is recommended to only import one purchase order at a time, since if an array of purchase orders is imported and one order failed to be procured, then no other orders in the list will be attempted to import.
-
+Read [https://www.squizz.com/docs/squizz/Platform-API.html#section961](https://www.squizz.com/docs/squizz/Platform-API.html#section961) for more documentation about the endpoint and its requirements.
 See the example below on how the call the Send and Procure Purchase order From Supplier endpoint. Note that a session must first be created in the API before calling the endpoint.
 
 
@@ -254,6 +260,8 @@ See the example below on how the call the Send and Procure Purchase order From S
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
 import org.esd.EcommerceStandardsDocuments.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ExampleRunner 
 {
@@ -263,9 +271,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -283,7 +292,7 @@ public class ExampleRunner
 		}
 		
 		//sand and procure purchsae order if the API was successfully created
-		if(apiOrgSession.sessionExists)
+		if(apiOrgSession.sessionExists())
 		{
             //create purchase order record to import
             ESDRecordOrderPurchase purchaseOrderRecord = new ESDRecordOrderPurchase();
@@ -456,15 +465,15 @@ public class ExampleRunner
 }
 ```
 
-##Validate Organisation Security Certificate Endpoint##
+##Validate Organisation API Session Endpoint##
 
 After a session has been created with SQUIZZ.com platform's API, if the same session is persistently being used over a long period time, then its worth validating that the session has not been destroyed by the API.
 The SQUIZZ.com platform's API will automatically expire and destory sessions that have existed for a long period of time.
+Read [https://www.squizz.com/docs/squizz/Platform-API.html#section842](https://www.squizz.com/docs/squizz/Platform-API.html#section842) for more documentation about the endpoint.
 
 ```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
-import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 
 public class ExampleRunner 
 {
@@ -474,9 +483,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -497,7 +507,7 @@ public class ExampleRunner
 		//call API endpoints...
 		
 		//check if the session still is valid
-		APIv1EndpointResponse endpointResponse = apiOrgSession.validateOrgSession();
+		endpointResponse = apiOrgSession.validateOrgSession();
 		
 		//check the result of validating the session
 		if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
@@ -511,7 +521,7 @@ public class ExampleRunner
 }
 ```
 
-##Validate Create Organisation Security Certificate Endpoint##
+##Validate/Create Organisation API Session Endpoint##
 
 After a session has been created with SQUIZZ.com platform's API, if the same session is persistently being used over a long period time, then a helper method in the library can be used to check if the API session is still valid, then if not have a new session be created.
 The SQUIZZ.com platform's API will automatically expire and destory sessions that have existed for a long period of time.
@@ -519,7 +529,6 @@ The SQUIZZ.com platform's API will automatically expire and destory sessions tha
 ```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
-import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 
 public class ExampleRunner 
 {
@@ -529,9 +538,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -552,7 +562,7 @@ public class ExampleRunner
 		//call API endpoints...
 		
 		//check if the session still is valid, if not have a new session created with the same organisation API credentials
-		APIv1EndpointResponse endpointResponse = apiOrgSession.validateCreateOrgSession();
+		endpointResponse = apiOrgSession.validateCreateOrgSession();
 		
 		//check the result of validating or creating a new session
 		if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
@@ -569,11 +579,11 @@ public class ExampleRunner
 ##Destroy Organisation API Session Endpoint##
 
 After a session has been created with SQUIZZ.com platform's API, if after calling other endpoints there no need for the session anymore, then it's advisable to destroy the session as soon as possible.
+Read [https://www.squizz.com/docs/squizz/Platform-API.html#section841](https://www.squizz.com/docs/squizz/Platform-API.html#section841) for more documentation about the endpoint.
 
 ```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
-import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 
 public class ExampleRunner 
 {
@@ -583,9 +593,10 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
-		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, 0, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
+		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
 		
 		//call the platform's API to request that a session is created
 		APIv1EndpointResponse endpointResponse = apiOrgSession.createOrgSession();
@@ -606,16 +617,14 @@ public class ExampleRunner
 		//call API endpoints...
 		
 		//destroy the session in the platform's API
-		APIv1EndpointResponse endpointResponse = apiOrgSession.destroyOrgSession();
+		endpointResponse = apiOrgSession.destroyOrgSession();
 		
 		//check the result of destroying the session
 		if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
 			System.out.println("SUCCESS - API session successfully destroyed.");
 		}else{
-			System.out.println("FAIL - API session failed to be destroyed. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+			System.out.println("FAIL - API session failed to be destroyed. Reason: " + endpointResponse.result_message  + " Error Code: " + endpointResponse.result_code);
 		}
-		
-		//destroy API session when done...
     }
 }
 ```

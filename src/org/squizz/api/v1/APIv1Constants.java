@@ -16,7 +16,7 @@ public class APIv1Constants
     /**
      * HTTP protocol to use when calling the platform's API
      */
-    public static final String API_PROTOCOL = "http://";
+    public static final String API_PROTOCOL = "https://";
     
     /**
      * internet domain to use when calling the platform's API

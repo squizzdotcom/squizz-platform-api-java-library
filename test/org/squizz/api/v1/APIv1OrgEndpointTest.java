@@ -12,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import org.squizz.api.v1.endpoint.APIv1EndpointOrgImportESDocument;
 import org.squizz.api.v1.endpoint.APIv1EndpointOrgValidateSecurityCertificate;
-import EcommerceStandardsDocuments.*;
+import org.esd.EcommerceStandardsDocuments.*;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;

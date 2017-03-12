@@ -10,7 +10,7 @@ import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Locale;
-import EcommerceStandardsDocuments.ESDocumentConstants;
+import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 
 
 /**

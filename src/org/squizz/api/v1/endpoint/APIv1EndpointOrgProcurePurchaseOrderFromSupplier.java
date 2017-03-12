@@ -6,9 +6,9 @@
 */
 package org.squizz.api.v1.endpoint;
 
-import EcommerceStandardsDocuments.ESDocument;
-import EcommerceStandardsDocuments.ESDocumentOrderPurchase;
-import EcommerceStandardsDocuments.ESDocumentOrderSale;
+import org.esd.EcommerceStandardsDocuments.ESDocument;
+import org.esd.EcommerceStandardsDocuments.ESDocumentOrderPurchase;
+import org.esd.EcommerceStandardsDocuments.ESDocumentOrderSale;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;

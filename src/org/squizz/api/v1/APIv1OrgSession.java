@@ -9,7 +9,7 @@ package org.squizz.api.v1;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponse;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import EcommerceStandardsDocuments.ESDocumentConstants;
+import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;

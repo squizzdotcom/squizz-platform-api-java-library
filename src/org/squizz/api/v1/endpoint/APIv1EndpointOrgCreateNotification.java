@@ -6,7 +6,7 @@
 */
 package org.squizz.api.v1.endpoint;
 
-import EcommerceStandardsDocuments.ESDocumentConstants;
+import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;

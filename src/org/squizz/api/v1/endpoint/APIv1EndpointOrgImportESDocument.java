@@ -14,7 +14,7 @@ import javafx.util.Pair;
 import org.squizz.api.v1.APIv1Constants;
 import org.squizz.api.v1.APIv1HTTPRequest;
 import org.squizz.api.v1.APIv1OrgSession;
-import EcommerceStandardsDocuments.*;
+import org.esd.EcommerceStandardsDocuments.*;
 
 /**
  * Class handles calling the SQUIZZ.com API endpoint to push and import different kinds of organisational data into the platform such as products, customer accounts, and many other data types. See the full list at https://www.squizz.com/docs/squizz/Platform-API.html#section843

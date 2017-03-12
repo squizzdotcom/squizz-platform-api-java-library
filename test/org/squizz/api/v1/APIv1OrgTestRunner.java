@@ -6,7 +6,7 @@
 */
 package org.squizz.api.v1;
 
-import EcommerceStandardsDocuments.ESDocumentConstants;
+import org.esd.EcommerceStandardsDocuments.ESDocumentConstants;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 

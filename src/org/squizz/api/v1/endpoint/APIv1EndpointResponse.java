@@ -5,7 +5,7 @@
 * You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 package org.squizz.api.v1.endpoint;
-import EcommerceStandardsDocuments.ESDocument;
+import org.esd.EcommerceStandardsDocuments.ESDocument;
 
 /**
  * Represents the response returned from an endpoint in the platform's API
