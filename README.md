@@ -14,11 +14,13 @@ If you are a software developer writing a Java application then we recommend tha
 
 ## Getting Started
 
-To get started using the library within Java applications, download and reference the JAR library to your application using your most preferred way.
-To use the library within a Java class using the following import syntax:
+To get started using the library within Java applications, download the Java API library and its dependent libraries from the [Release page](https://github.com/squizzdotcom/squizz-platform-api-java-library/releases) and add references to the JAR libraries in your application using your most preferred way (such as within a class path).
+The library contains dependencies on the [Jackson JSON Java Library](https://github.com/FasterXML/jackson) as well as the [Ecommerce Standards Documents Java Library](https://github.com/squizzdotcom/ecommerce-standards-documents-java-library)
+Once the library is referenced within your Java application then to use it within a Java class you can use the following import syntax:
 
 ```
 import org.squizz.api.v1.*;
+import org.squizz.api.v1.endpoint.*;
 ```
 
 ## Create Organisation API Session Endpoint
