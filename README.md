@@ -195,7 +195,7 @@ public class ExampleRunner
 			taxcodeRecord.description = "Goods And Services Tax";
 			taxcodeRecord.taxcodePercentageRate = 10;
 			taxcodeRecords.add(taxcodeRecord);
-            
+			
 			taxcodeRecord = new ESDRecordTaxcode();
 			taxcodeRecord.keyTaxcodeID = "2";
 			taxcodeRecord.taxcode = "FREE";
@@ -211,13 +211,13 @@ public class ExampleRunner
 			taxcodeRecord.description = "New Zealand Goods and Services Tax";
 			taxcodeRecord.taxcodePercentageRate = 15;
 			taxcodeRecords.add(taxcodeRecord);
-            
+			
 			//create a hashmap containing configurations of the organisation taxcode data
 			HashMap<String, String> configs = new HashMap<>();
             
 			//add a dataFields attribute that contains a comma delimited list of tacode record fields that the API is allowed to insert, update in the platform
 			configs.put("dataFields", "keyTaxcodeID,taxcode,taxcodeLabel,description,taxcodePercentageRate");
-
+			
 			//create a Ecommerce Standards Document that stores an array of taxcode records
 			ESDocumentTaxcode taxcodeESD = new ESDocumentTaxcode(ESDocumentConstants.RESULT_SUCCESS, "successfully obtained data", taxcodeRecords.toArray(new ESDRecordTaxcode[0]), configs);
 			
@@ -255,6 +255,7 @@ It is recommended to only import one purchase order at a time, since if an array
 Read [https://www.squizz.com/docs/squizz/Platform-API.html#section961](https://www.squizz.com/docs/squizz/Platform-API.html#section961) for more documentation about the endpoint and its requirements.
 See the example below on how the call the Send and Procure Purchase order From Supplier endpoint. Note that a session must first be created in the API before calling the endpoint.
 
+![alt tag](https://attach.squizz.com/doc_centre/1/files/images/masters/SQUIZZ-Customer-Purchase-Order-Procurement-Supplier[124].png)
 
 ```java
 import org.squizz.api.v1.*;
@@ -296,7 +297,7 @@ public class ExampleRunner
 		{
 			//create purchase order record to import
 			ESDRecordOrderPurchase purchaseOrderRecord = new ESDRecordOrderPurchase();
-		
+			
 			//set data within the purchase order
 			purchaseOrderRecord.keyPurchaseOrderID = "111";
 			purchaseOrderRecord.purchaseOrderCode = "POEXAMPLE-345";
@@ -305,7 +306,7 @@ public class ExampleRunner
 			purchaseOrderRecord.instructions = "Leave goods at the back entrance";
 			purchaseOrderRecord.keySupplierAccountID = "2";
 			purchaseOrderRecord.supplierAccountCode = "ACM-002";
-            
+			
 			//set delivery address that ordered goods will be delivered to
 			purchaseOrderRecord.deliveryAddress1 = "32";
 			purchaseOrderRecord.deliveryAddress2 = "Main Street";
@@ -325,7 +326,7 @@ public class ExampleRunner
 			purchaseOrderRecord.billingPostcode = "3000";
 			purchaseOrderRecord.billingOrgName = "Acme Industries International";
 			purchaseOrderRecord.billingContact = "John Citizen";
-            		
+			
 			//create an array of purchase order lines
 			ArrayList<ESDRecordOrderPurchaseLine> orderLines = new ArrayList<ESDRecordOrderPurchaseLine>();
 			
@@ -364,15 +365,15 @@ public class ExampleRunner
 			
 			//create purchase order Ecommerce Standards document and add purchse order records to the document
 			ESDocumentOrderPurchase orderPurchaseESD = new ESDocumentOrderPurchase(ESDocumentConstants.RESULT_SUCCESS, "successfully obtained data", purchaseOrderRecords.toArray(new ESDRecordOrderPurchase[0]), new HashMap<String, String>());
-
+			
 			//send purchase order document to the API for procurement by the supplier organisation
 			APIv1EndpointResponseESD endpointResponseESD = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.call(apiOrgSession, timeoutMilliseconds, supplierOrgID, customerAccountCode, orderPurchaseESD);
 			ESDocumentOrderSale esDocumentOrderSale = (ESDocumentOrderSale)endpointResponseESD.esDocument;
-            
+			
 			//check the result of procuring the purchase orders
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
 				System.out.println("SUCCESS - organisation purchase orders have successfully been sent to supplier organisation.");
-                
+				
 				//iterate through each of the returned sales orders and output the details of the sales orders
 				if(esDocumentOrderSale.dataRecords != null){
 					for (ESDRecordOrderSale salesOrderRecord : esDocumentOrderSale.dataRecords){
@@ -394,11 +395,11 @@ public class ExampleRunner
 					{
 						//get comma separated list of order record indicies and line indicies that indicate the unmapped order lines
 						String unmappedOrderLineCSV = esDocumentOrderSale.configs.get(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNMAPPED_LINES);
-                        
+						
 						//get the index of the order record and line that contained the unmapped product
 						if(!unmappedOrderLineCSV.trim().isEmpty()){
 							String[] unmappedOrderLineIndices = unmappedOrderLineCSV.trim().split(",");
-                            
+							
 							//iterate through each order-line index
 							for(int i=0; i < unmappedOrderLineIndices.length; i++){
 								//get order index and line index
@@ -516,7 +517,7 @@ public class ExampleRunner
 		}
 		
 		//destroy API session when done...
-    }
+	}
 }
 ```
 
@@ -571,7 +572,7 @@ public class ExampleRunner
 		}
 		
 		//destroy API session when done...
-    }
+	}
 }
 ```
 
