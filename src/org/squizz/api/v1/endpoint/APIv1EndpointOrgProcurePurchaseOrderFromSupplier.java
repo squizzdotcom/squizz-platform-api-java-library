@@ -71,4 +71,84 @@ public class APIv1EndpointOrgProcurePurchaseOrderFromSupplier
         
         return endpointResponse;
     }
+    
+    /**
+     * gets a list of order indexes that contain order lines that could not be mapped to a supplier organisation's products
+     * @param esDocument Ecommerce standards document containing configuration that specifies unmapped order lines
+     * @return an array containing pairs. Each pair has the index of the order, and the index of the order line that could not be mapped
+     */
+    public static ArrayList<Pair<Integer, Integer>> getUnmappedOrderLines(ESDocument esDocument)
+    {
+        ArrayList<Pair<Integer, Integer>> upmappedOrderLines = new ArrayList<>();
+        
+        //check that the ecommerce standards document's configs contains a key specifying the unmapped order lines
+        if(esDocument.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNMAPPED_LINES))
+        {
+            //get comma separated list of order record indicies and line indicies that indicate the unmapped order lines
+            String unmappedOrderLineCSV = esDocument.configs.get(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNMAPPED_LINES);
+
+            //get the index of the order record and line that contained the unmapped product
+            if(!unmappedOrderLineCSV.trim().isEmpty()){
+                String[] unmappedOrderLineIndices = unmappedOrderLineCSV.trim().split(",");
+
+                //iterate through each order-line index
+                for(int i=0; i < unmappedOrderLineIndices.length; i++){
+                    //get order index and line index
+                    String[] orderLineIndex = unmappedOrderLineIndices[i].split(":");
+                    if(orderLineIndex.length == 2){
+                        try{
+                            int orderIndex = Integer.parseInt(orderLineIndex[0]);
+                            int lineIndex = Integer.parseInt(orderLineIndex[1]);
+                            Pair<Integer, Integer> orderLinePair = new Pair<>(orderIndex, lineIndex);
+                            upmappedOrderLines.add(orderLinePair);
+
+                        }catch(Exception ex){
+                        }
+                    }
+                }
+            }
+        }
+        
+        return upmappedOrderLines;
+    }
+    
+    /**
+     * gets a list of order indexes that contain order lines that could not be priced for a supplier organisation's products
+     * @param esDocument Ecommerce standards document containing configuration that specifies unpriced order lines
+     * @return an array containing pairs. Each pair has the index of the order, and the index of the order line that could not be priced
+     */
+    public static ArrayList<Pair<Integer, Integer>> getUnpricedOrderLines(ESDocument esDocument)
+    {
+        ArrayList<Pair<Integer, Integer>> unpricedOrderLines = new ArrayList<>();
+        
+        //check that the ecommerce standards document's configs contains a key specifying the unpriced order lines
+        if(esDocument.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES))
+        {
+            //get comma separated list of order record indicies and line indicies that indicate the unpriced order lines
+            String unpricedOrderLineCSV = esDocument.configs.get(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES);
+
+            //get the index of the order record and line that contained the unpriced product
+            if(!unpricedOrderLineCSV.trim().isEmpty()){
+                String[] unmappedOrderLineIndices = unpricedOrderLineCSV.trim().split(",");
+
+                //iterate through each order-line index
+                for(int i=0; i < unmappedOrderLineIndices.length; i++){
+                    //get order index and line index
+                    String[] orderLineIndex = unmappedOrderLineIndices[i].split(":");
+                    if(orderLineIndex.length == 2){
+                        try{
+                            int orderIndex = Integer.parseInt(orderLineIndex[0]);
+                            int lineIndex = Integer.parseInt(orderLineIndex[1]);
+                            Pair<Integer, Integer> orderLinePair = new Pair<>(orderIndex, lineIndex);
+                            unpricedOrderLines.add(orderLinePair);
+
+                        }catch(Exception ex){
+                        }
+                    }
+                }
+            }
+        }
+        
+        return unpricedOrderLines;
+    }
 }

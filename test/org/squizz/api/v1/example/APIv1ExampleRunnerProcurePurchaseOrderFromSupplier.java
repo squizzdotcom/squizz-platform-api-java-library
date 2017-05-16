@@ -11,6 +11,7 @@ import org.squizz.api.v1.endpoint.*;
 import org.esd.EcommerceStandardsDocuments.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.util.Pair;
 
 /**
  * Shows an example of creating a organisation session with the SQUIZZ.com platform's API, then sends a organisation's purchase order data to supplier
@@ -148,34 +149,18 @@ public class APIv1ExampleRunnerProcurePurchaseOrderFromSupplier
                 //if one or more products in the purchase order could not match a product for the supplier organisation then find out the order lines caused the problem
                 if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_PRODUCT_NOT_MAPPED) && esDocumentOrderSale != null)
                 {   
-                    if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNMAPPED_LINES))
-                    {
-                        //get comma separated list of order record indicies and line indicies that indicate the unmapped order lines
-                        String unmappedOrderLineCSV = esDocumentOrderSale.configs.get(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNMAPPED_LINES);
+                    //get a list of order lines that could not be mapped
+                    ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnmappedOrderLines(esDocumentOrderSale);
+                    
+                    //iterate through each unmapped order line
+                    for(Pair<Integer, Integer> unmappedLine : unmappedLines){
+                        //get the index of the purchase order and line that contained the unmapped product
+                        int orderIndex = unmappedLine.getKey();
+                        int lineIndex = unmappedLine.getValue();
                         
-                        //get the index of the order record and line that contained the unmapped product
-                        if(!unmappedOrderLineCSV.trim().isEmpty()){
-                            String[] unmappedOrderLineIndices = unmappedOrderLineCSV.trim().split(",");
-                            
-                            //iterate through each order-line index
-                            for(int i=0; i < unmappedOrderLineIndices.length; i++){
-                                //get order index and line index
-                                String[] orderLineIndex = unmappedOrderLineIndices[i].split(":");
-                                if(orderLineIndex.length == 2){
-                                    try{
-                                        int orderIndex = Integer.parseInt(orderLineIndex[0]);
-                                        int lineIndex = Integer.parseInt(orderLineIndex[1]);
-                                        
-                                        //check that the order can be found that contains the problematic line
-                                        if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
-                                            System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " a matching supplier product for line number: " + (lineIndex+1) + " could not be found.");
-                                        }
-                                        
-                                    }catch(Exception ex){
-                                        System.out.println("Error when trying to specify the purchase order that contains an unmapped order line. Error: " + ex.getLocalizedMessage());
-                                    }
-                                }
-                            }
+                        //check that the order can be found that contains the problematic line
+                        if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
+                            System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " a matching supplier product for line number: " + (lineIndex+1) + " could not be found.");
                         }
                     }
                 }
@@ -184,31 +169,18 @@ public class APIv1ExampleRunnerProcurePurchaseOrderFromSupplier
                 {
                     if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES))
                     {
-                        //get comma separated list of order record indicies and line indicies that indicate the unpriced order lines
-                        String unmappedOrderLineCSV = esDocumentOrderSale.configs.get(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES);
-                        
-                        //get the index of the order record and line that contained the unpriced product
-                        if(!unmappedOrderLineCSV.trim().isEmpty()){
-                            String[] unmappedOrderLineIndices = unmappedOrderLineCSV.trim().split(",");
-                            
-                            //iterate through each order-line index
-                            for(int i=0; i < unmappedOrderLineIndices.length; i++){
-                                //get order index and line index
-                                String[] orderLineIndex = unmappedOrderLineIndices[i].split(":");
-                                if(orderLineIndex.length == 2){
-                                    try{
-                                        int orderIndex = Integer.parseInt(orderLineIndex[0]);
-                                        int lineIndex = Integer.parseInt(orderLineIndex[1]);
-                                        
-                                        //check that the order can be found that contains the problematic line
-                                        if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
-                                            System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has not set pricing for line number: " + (lineIndex+1));
-                                        }
-                                        
-                                    }catch(Exception ex){
-                                        System.out.println("Error when trying to specify the purchase order that contains an unpriced order line. Error: " + ex.getLocalizedMessage());
-                                    }
-                                }
+                        //get a list of order lines that could not be priced
+                        ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnpricedOrderLines(esDocumentOrderSale);
+
+                        //iterate through each unpriced order line
+                        for(Pair<Integer, Integer> unmappedLine : unmappedLines){
+                            //get the index of the purchase order and line that contained the unpriced product
+                            int orderIndex = unmappedLine.getKey();
+                            int lineIndex = unmappedLine.getValue();
+
+                            //check that the order can be found that contains the problematic line
+                            if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
+                                System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has not set pricing for line number: " + (lineIndex+1));
                             }
                         }
                     }
