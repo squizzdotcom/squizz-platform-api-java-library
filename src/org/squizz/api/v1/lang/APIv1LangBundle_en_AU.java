@@ -37,6 +37,8 @@ public class APIv1LangBundle_en_AU extends ListResourceBundle
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INSUFFICIENT_CREDIT, "An error occurred when calling SQUIZZ.com's API due to the organisation having insufficient trading tokens in the platform to process the request."},
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_SECURITY_CERTIFICATE_NOT_FOUND, "An error occurred when calling SQUIZZ.com's API due to the organisation's security certificate not able to found or does not exist."},
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_SENDER_DOES_NOT_MATCH_CERTIFICATE_COMMON_NAME, "An error occurred when calling SQUIZZ.com's API, due to the common name set in the organisation's security certificate not matching the IP address of the internet connection used to call the endpoint"},
+            {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INVALID_API_ACTION, "An error occurred when calling SQUIZZ.com's API, due to the endpoint being called not being found or no longer existing."},
+            {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_PERMISSION_DENIED, "An error occurred when calling SQUIZZ.com's API due to permission being denied to access data, or save data, or access the endpoint."},
                 
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_DATA_IMPORT_MISSING_IMPORT_TYPE,"An error occurred when calling SQUIZZ.com's API due to no data type set indicating the kind of data being imported."},
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_DATA_IMPORT_MAX_IMPORTS_RUNNING,"An error occurred when calling SQUIZZ.com's API due to the maximum number of data imports being run over a short period of time. Wait a while before calling the endpoint again and consider calling the endpoint less often."},
@@ -59,7 +61,8 @@ public class APIv1LangBundle_en_AU extends ListResourceBundle
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_PRODUCT_NOT_MAPPED,"An error occurred when calling SQUIZZ.com's API due to not being able to find a matching product in the supplier's organisation."},
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_MAPPED_PRODUCT_PRICE_NOT_FOUND,"An error occurred when calling SQUIZZ.com's API due to not being able to price a product in the supplier's organisation."},
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_CUSTOMER_ACCOUNT_ON_HOLD,"An error occurred when calling SQUIZZ.com's API due to the customer account in the supplier's organisation being on hold and not allowing for further trading activity."},
-            {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_CUSTOMER_ACCOUNT_OUTSIDE_BALANCE_LIMIT,"An error occurred when calling SQUIZZ.com's API due to the customer account's balance in the supplier's organisation being over the allowed limit. Not further trading can occur with the account until payments have been made against the account's balance."}
+            {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_CUSTOMER_ACCOUNT_OUTSIDE_BALANCE_LIMIT,"An error occurred when calling SQUIZZ.com's API due to the customer account's balance in the supplier's organisation being over the allowed limit. Not further trading can occur with the account until payments have been made against the account's balance."},
+            {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INCORRECT_DATA_TYPE,"An error occurred when calling SQUIZZ.com's API due to the data type specified not being supported or of the correct type."}
         };
     }
 }

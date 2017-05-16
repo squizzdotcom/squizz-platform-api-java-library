@@ -55,7 +55,7 @@ public class APIv1EndpointOrgImportESDocument
         APIv1EndpointResponseESD endpointResponse = new APIv1EndpointResponseESD();
         
         try{
-            //set notification parameters
+            //set endpoint parameters
             String endpointParams = "import_type_id="+importTypeID;
             
             //create JSON deserializer to interpret the response from the endpoint

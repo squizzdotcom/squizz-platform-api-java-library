@@ -97,7 +97,7 @@ public class APIv1ExampleRunnerImportOrgESDData
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
                 System.out.println("SUCCESS - organisation data successfully imported into the platform");
             }else{
-                System.out.println("FAIL - organisation data successfully imported into the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+                System.out.println("FAIL - organisation data failed to be imported into the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
             }
 		}
 		

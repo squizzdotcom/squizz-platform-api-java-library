@@ -69,6 +69,11 @@ public class APIv1Constants
     public static final String API_ORG_ENDPOINT_PROCURE_PURCHASE_ORDER_FROM_SUPPLIER = "procure_purchase_order_from_supplier";
     
     /**
+     * name of the platform's API endpoint to call to get organisation data returned in an Ecommerce Standards Document from a connected organisation
+     */
+    public static final String API_ORG_ENDPOINT_RETRIEVE_ESD = "retrieve_esd";
+    
+    /**
      * name of the endpoint attribute in the API endpoint response that contains the result code
      */
     public static final String API_ORG_ENDPOINT_ATTRIBUTE_RESULT_CODE = "result_code";
