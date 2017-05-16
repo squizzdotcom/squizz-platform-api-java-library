@@ -260,18 +260,18 @@ import org.esd.EcommerceStandardsDocuments.*;
 public class ExampleRunner 
 {
 	public static void main(String[] args)
-    {
+	{
 		//check that the required arguments have been given
-        if(args.length < 4){
-            System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [supplierOrgID] [(optional)customerAccountCode]");
-            return;
-        }
+		if(args.length < 4){
+			System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [supplierOrgID] [(optional)customerAccountCode]");
+			return;
+		}
         
 		//obtain or load in an organisation's API credentials, in this example from command line arguments
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
-        int sessionTimeoutMilliseconds = 20000;
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
 		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
@@ -296,48 +296,48 @@ public class ExampleRunner
 		{   
 			//after 60 seconds give up on waiting for data from the API
 			int timeoutMilliseconds = 60000;
-            
-            //specify the supplier organisation to get data from based on its ID within the platform, in this example the ID comes from command line arguments
-            String supplierOrgID = args[3];
-            
-            //optionally get the customer account code if required based on the type of data being retrived, in this example the account code comes from command line arguments
-            String customerAccountCode = (args.length > 4? args[4]: "");
+			
+			//specify the supplier organisation to get data from based on its ID within the platform, in this example the ID comes from command line arguments
+			String supplierOrgID = args[3];
+			
+			//optionally get the customer account code if required based on the type of data being retrived, in this example the account code comes from command line arguments
+			String customerAccountCode = (args.length > 4? args[4]: "");
 			
 			//call the platform's API to retrieve the organisation's data, which for this example is product pricing
 			APIv1EndpointResponseESD endpointResponseESD = APIv1EndpointOrgRetrieveESDocument.call(apiOrgSession, timeoutMilliseconds, APIv1EndpointOrgRetrieveESDocument.RETRIEVE_TYPE_ID_PRICING, supplierOrgID, customerAccountCode);
-            ESDocumentPrice esDocumentPrice = (ESDocumentPrice)endpointResponseESD.esDocument;
+			ESDocumentPrice esDocumentPrice = (ESDocumentPrice)endpointResponseESD.esDocument;
 			
 			//check that the data successfully retrieved
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
-                System.out.println("SUCCESS - organisation data successfully obtained from the platform");
-                System.out.println("\nPrice Records Returned: " + esDocumentPrice.totalDataRecords);
-                
-                //check that records have been placed into the standards document
-                if(esDocumentPrice.dataRecords != null){
-                    System.out.println("Price Records:");
-                    
-                    //iterate through each price record stored within the standards document
-                    int i=0;
-                    for(ESDRecordPrice priceRecord: esDocumentPrice.dataRecords)
-                    {    
-                        //output details of the price record
-                        System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                        System.out.println("  Price Record #: " + i);
-                        System.out.println("  Key Product ID: " + priceRecord.keyProductID);
-                        System.out.println("           Price: " + priceRecord.price);
-                        System.out.println("        Quantity: " + priceRecord.quantity);
-                        if(priceRecord.taxRate != 0){
-                            System.out.println("      Tax Rate: " + priceRecord.taxRate);
-                        }
-                        System.out.println("Key Sell Unit ID: " + priceRecord.keySellUnitID);
-                        System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                
-                        i++;
-                    }
-                }
-            }else{
-                System.out.println("FAIL - organisation data failed to be obtained from the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
-            }
+				System.out.println("SUCCESS - organisation data successfully obtained from the platform");
+				System.out.println("\nPrice Records Returned: " + esDocumentPrice.totalDataRecords);
+				
+				//check that records have been placed into the standards document
+				if(esDocumentPrice.dataRecords != null){
+					System.out.println("Price Records:");
+					
+					//iterate through each price record stored within the standards document
+					int i=0;
+					for(ESDRecordPrice priceRecord: esDocumentPrice.dataRecords)
+					{    
+						//output details of the price record
+						System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+						System.out.println("  Price Record #: " + i);
+						System.out.println("  Key Product ID: " + priceRecord.keyProductID);
+						System.out.println("           Price: " + priceRecord.price);
+						System.out.println("        Quantity: " + priceRecord.quantity);
+						if(priceRecord.taxRate != 0){
+							System.out.println("      Tax Rate: " + priceRecord.taxRate);
+						}
+						System.out.println("Key Sell Unit ID: " + priceRecord.keySellUnitID);
+						System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								
+						i++;
+					}
+				}
+			}else{
+				System.out.println("FAIL - organisation data failed to be obtained from the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+			}
 		}
 		
 		//next steps
@@ -347,7 +347,7 @@ public class ExampleRunner
 }
 ```
 
-##Send and Procure Purchase Order From Supplier Endpoint##
+## Send and Procure Purchase Order From Supplier Endpoint
 
 The SQUIZZ.com platform's API has an endpoint that allows an orgnisation to import a purchase order. and have it procured/converted into a sales order of a designated supplier organisation. 
 This endpoint allows a customer organisation to commit to buy goods and services of an organisation, and have the order processed, and delivered by the supplier organisation.
@@ -480,65 +480,65 @@ public class ExampleRunner
 			//send purchase order document to the API for procurement by the supplier organisation
 			APIv1EndpointResponseESD endpointResponseESD = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.call(apiOrgSession, timeoutMilliseconds, supplierOrgID, "", orderPurchaseESD);
 			ESDocumentOrderSale esDocumentOrderSale = (ESDocumentOrderSale)endpointResponseESD.esDocument;
-            
-            //check the result of procuring the purchase orders
-            if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
-                System.out.println("SUCCESS - organisation purchase orders have successfully been sent to supplier organisation.");
+			
+			//check the result of procuring the purchase orders
+			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
+				System.out.println("SUCCESS - organisation purchase orders have successfully been sent to supplier organisation.");
                 
-                //iterate through each of the returned sales orders and output the details of the sales orders
-                if(esDocumentOrderSale.dataRecords != null){
-                    for (ESDRecordOrderSale salesOrderRecord : esDocumentOrderSale.dataRecords){
-                        System.out.println("\nSales Order Returned, Order Details: ");
-                        System.out.println("Sales Order Code: " + salesOrderRecord.salesOrderCode);
-                        System.out.println("Sales Order Total Cost: " + salesOrderRecord.totalPriceIncTax + " (" + salesOrderRecord.currencyISOCode + ")");
-                        System.out.println("Sales Order Total Taxes: " + salesOrderRecord.totalTax + " (" + salesOrderRecord.currencyISOCode + ")");
-                        System.out.println("Sales Order Customer Account: " + salesOrderRecord.customerAccountCode);
-                        System.out.println("Sales Order Total Lines: " + salesOrderRecord.totalLines);
-                    }
-                }
+				//iterate through each of the returned sales orders and output the details of the sales orders
+				if(esDocumentOrderSale.dataRecords != null){
+					for (ESDRecordOrderSale salesOrderRecord : esDocumentOrderSale.dataRecords){
+						System.out.println("\nSales Order Returned, Order Details: ");
+						System.out.println("Sales Order Code: " + salesOrderRecord.salesOrderCode);
+						System.out.println("Sales Order Total Cost: " + salesOrderRecord.totalPriceIncTax + " (" + salesOrderRecord.currencyISOCode + ")");
+						System.out.println("Sales Order Total Taxes: " + salesOrderRecord.totalTax + " (" + salesOrderRecord.currencyISOCode + ")");
+						System.out.println("Sales Order Customer Account: " + salesOrderRecord.customerAccountCode);
+						System.out.println("Sales Order Total Lines: " + salesOrderRecord.totalLines);
+					}
+				}
             }else{
-                System.out.println("FAIL - organisation purchase orders failed to be processed. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
-                
-                //if one or more products in the purchase order could not match a product for the supplier organisation then find out the order lines caused the problem
-                if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_PRODUCT_NOT_MAPPED) && esDocumentOrderSale != null)
-                {   
-                    //get a list of order lines that could not be mapped
-                    ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnmappedOrderLines(esDocumentOrderSale);
-                    
-                    //iterate through each unmapped order line
-                    for(Pair<Integer, Integer> unmappedLine : unmappedLines){
-                        //get the index of the purchase order and line that contained the unmapped product
-                        int orderIndex = unmappedLine.getKey();
-                        int lineIndex = unmappedLine.getValue();
-                        
-                        //check that the order can be found that contains the problematic line
-                        if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
-                            System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " a matching supplier product for line number: " + (lineIndex+1) + " could not be found.");
-                        }
-                    }
-                }
-                //if one or more products in the purchase order could not be priced by the supplier organisation then find the order line that caused the problem
-                else if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_MAPPED_PRODUCT_PRICE_NOT_FOUND) && esDocumentOrderSale != null)
-                {
-                    if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES))
-                    {
-                        //get a list of order lines that could not be priced
-                        ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnpricedOrderLines(esDocumentOrderSale);
+				System.out.println("FAIL - organisation purchase orders failed to be processed. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+				
+				//if one or more products in the purchase order could not match a product for the supplier organisation then find out the order lines caused the problem
+				if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_PRODUCT_NOT_MAPPED) && esDocumentOrderSale != null)
+				{   
+					//get a list of order lines that could not be mapped
+					ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnmappedOrderLines(esDocumentOrderSale);
+					
+					//iterate through each unmapped order line
+					for(Pair<Integer, Integer> unmappedLine : unmappedLines){
+						//get the index of the purchase order and line that contained the unmapped product
+						int orderIndex = unmappedLine.getKey();
+						int lineIndex = unmappedLine.getValue();
+						
+						//check that the order can be found that contains the problematic line
+						if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
+							System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " a matching supplier product for line number: " + (lineIndex+1) + " could not be found.");
+						}
+					}
+				}
+				//if one or more products in the purchase order could not be priced by the supplier organisation then find the order line that caused the problem
+				else if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_MAPPED_PRODUCT_PRICE_NOT_FOUND) && esDocumentOrderSale != null)
+				{
+					if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES))
+					{
+						//get a list of order lines that could not be priced
+						ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnpricedOrderLines(esDocumentOrderSale);
 
-                        //iterate through each unpriced order line
-                        for(Pair<Integer, Integer> unmappedLine : unmappedLines){
-                            //get the index of the purchase order and line that contained the unpriced product
-                            int orderIndex = unmappedLine.getKey();
-                            int lineIndex = unmappedLine.getValue();
+						//iterate through each unpriced order line
+						for(Pair<Integer, Integer> unmappedLine : unmappedLines){
+							//get the index of the purchase order and line that contained the unpriced product
+							int orderIndex = unmappedLine.getKey();
+							int lineIndex = unmappedLine.getValue();
 
-                            //check that the order can be found that contains the problematic line
-                            if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
-                                System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has not set pricing for line number: " + (lineIndex+1));
-                            }
-                        }
-                    }
-                }
-            }
+							//check that the order can be found that contains the problematic line
+							if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
+								System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has not set pricing for line number: " + (lineIndex+1));
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		//next steps
