@@ -343,7 +343,7 @@ public class ExampleRunner
 		//next steps
 		//call other API endpoints...
 		//destroy API session when done...
-    }
+	}
 }
 ```
 
@@ -374,10 +374,10 @@ public class ExampleRunner
 	public static void main(String[] args)
     {
 		//check that the required arguments have been given
-        if(args.length < 4){
-            System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [supplierOrgID]");
-            return;
-        }
+		if(args.length < 4){
+			System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [supplierOrgID]");
+			return;
+		}
         
 		//obtain or load in an organisation's API credentials, in this example from command line arguments
 		String orgID = args[0];
@@ -496,7 +496,7 @@ public class ExampleRunner
 						System.out.println("Sales Order Total Lines: " + salesOrderRecord.totalLines);
 					}
 				}
-            }else{
+			}else{
 				System.out.println("FAIL - organisation purchase orders failed to be processed. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
 				
 				//if one or more products in the purchase order could not match a product for the supplier organisation then find out the order lines caused the problem
