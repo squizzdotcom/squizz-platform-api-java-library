@@ -34,7 +34,7 @@ public class APIv1ExampleRunnerSearchCustomerAccountRecords
         //specify the supplier organisation to get data from based on its ID within the platform, in this example the ID comes from command line arguments
         String supplierOrgID = args[3];
             
-        //optionally get the customer account code if required based on the type of data being retrived, in this example the account code comes from command line arguments
+        //optionally get the customer account code if required based on the type of data being retrieved, in this example the account code comes from command line arguments
         String customerAccountCode = args[4];
         String recordType = args[5].toUpperCase();
         
