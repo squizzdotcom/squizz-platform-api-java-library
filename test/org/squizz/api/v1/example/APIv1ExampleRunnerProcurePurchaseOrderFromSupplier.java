@@ -93,7 +93,6 @@ public class APIv1ExampleRunnerProcurePurchaseOrderFromSupplier
             orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
             orderProduct.productCode = "TEA-TOWEL-GREEN";
             orderProduct.productName = "Green tea towel - 30 x 6 centimetres";
-            orderProduct.keySellUnitID = "2";
             orderProduct.unitName = "EACH";
             orderProduct.quantity = 4;
             orderProduct.sellUnitBaseQuantity = 4;
@@ -104,8 +103,22 @@ public class APIv1ExampleRunnerProcurePurchaseOrderFromSupplier
             orderProduct.priceTotalIncTax = 22.00;
             orderProduct.priceTotalExTax = 20.00;
             orderProduct.priceTotalTax = 2.00;
+            orderLines.add(orderProduct);
             
-            //add order line to lines list
+            //add a 2nd purchase order line record that is a text line
+            orderProduct = new ESDRecordOrderPurchaseLine();
+            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_TEXT;
+            orderProduct.productCode = "TEA-TOWEL-BLUE";
+            orderProduct.textDescription = "Please bundle tea towels into a box";
+            orderLines.add(orderProduct);
+            
+            //add a 3rd purhase order line record
+            orderProduct = new ESDRecordOrderPurchaseLine();
+            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
+            orderProduct.productCode = "PINKDOU";
+            orderProduct.productName = "Blue tea towel - 30 x 6 centimetres";
+            orderProduct.quantity = 2;
+            orderProduct.salesOrderProductCode = "ACME-SUPPLIER-TTBLUE"; 
             orderLines.add(orderProduct);
             
             //add order lines to the order
@@ -181,6 +194,27 @@ public class APIv1ExampleRunnerProcurePurchaseOrderFromSupplier
                             //check that the order can be found that contains the problematic line
                             if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
                                 System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has not set pricing for line number: " + (lineIndex+1));
+                            }
+                        }
+                    }
+                }
+                //if one or more products in the purchase order did not have stock available by the supplier organisation then find the order line that caused the problem
+                else if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_MAPPED_PRODUCT_STOCK_NOT_AVAILABLE) && esDocumentOrderSale != null)
+                {
+                    if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNSTOCKED_LINES))
+                    {
+                        //get a list of order lines that could not be stocked
+                        ArrayList<Pair<Integer, Integer>> unstockedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnstockedOrderLines(esDocumentOrderSale);
+
+                        //iterate through each unstocked order line
+                        for(Pair<Integer, Integer> unstockedLine : unstockedLines){
+                            //get the index of the purchase order and line that contained the unstocked product
+                            int orderIndex = unstockedLine.getKey();
+                            int lineIndex = unstockedLine.getValue();
+
+                            //check that the order can be found that contains the problematic line
+                            if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
+                                System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has no stock available for line number: " + (lineIndex+1));
                             }
                         }
                     }

@@ -151,4 +151,44 @@ public class APIv1EndpointOrgProcurePurchaseOrderFromSupplier
         
         return unpricedOrderLines;
     }
+    
+    /**
+     * gets a list of order indexes that contain order lines that could not be stocked for a supplier organisation's products
+     * @param esDocument Ecommerce standards document containing configuration that specifies unpriced order lines
+     * @return an array containing pairs. Each pair has the index of the order, and the index of the order line that could not be stocked
+     */
+    public static ArrayList<Pair<Integer, Integer>> getUnstockedOrderLines(ESDocument esDocument)
+    {
+        ArrayList<Pair<Integer, Integer>> unstockedOrderLines = new ArrayList<>();
+        
+        //check that the ecommerce standards document's configs contains a key specifying the unstocked order lines
+        if(esDocument.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNSTOCKED_LINES))
+        {
+            //get comma separated list of order record indicies and line indicies that indicate the unstocked order lines
+            String unstockedOrderLineCSV = esDocument.configs.get(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNSTOCKED_LINES);
+
+            //get the index of the order record and line that contained the unstocked product
+            if(!unstockedOrderLineCSV.trim().isEmpty()){
+                String[] unmappedOrderLineIndices = unstockedOrderLineCSV.trim().split(",");
+
+                //iterate through each order-line index
+                for(int i=0; i < unmappedOrderLineIndices.length; i++){
+                    //get order index and line index
+                    String[] orderLineIndex = unmappedOrderLineIndices[i].split(":");
+                    if(orderLineIndex.length == 2){
+                        try{
+                            int orderIndex = Integer.parseInt(orderLineIndex[0]);
+                            int lineIndex = Integer.parseInt(orderLineIndex[1]);
+                            Pair<Integer, Integer> orderLinePair = new Pair<>(orderIndex, lineIndex);
+                            unstockedOrderLines.add(orderLinePair);
+
+                        }catch(Exception ex){
+                        }
+                    }
+                }
+            }
+        }
+        
+        return unstockedOrderLines;
+    }
 }
