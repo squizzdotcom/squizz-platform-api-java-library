@@ -16,7 +16,7 @@ import org.esd.EcommerceStandardsDocuments.*;
 /**
  * Shows an example of creating a organisation session with the SQUIZZ.com platform's API, then retrieve the details of a record from a conencted organisation's customer account in the platform
  */
-public class APIv1ExampleRetrieveSearchCustomerAccountRecord 
+public class APIv1ExampleRunnerRetrieveCustomerAccountRecord 
 {
     public static void main(String[] args)
     {
