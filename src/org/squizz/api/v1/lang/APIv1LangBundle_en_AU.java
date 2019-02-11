@@ -66,7 +66,14 @@ public class APIv1LangBundle_en_AU extends ListResourceBundle
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_CUSTOMER_ACCOUNT_OUTSIDE_BALANCE_LIMIT,"An error occurred when calling SQUIZZ.com's API due to the customer account's balance in the supplier's organisation being over the allowed limit. Not further trading can occur with the account until payments have been made against the account's balance."},
             {APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INCORRECT_DATA_TYPE,"An error occurred when calling SQUIZZ.com's API due to the data type specified not being supported or of the correct type."},	
 			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_MAX_SEARCHES_REACHED,"An error occurred when calling SQUIZZ.com's API due to the maximum number search requested being made. Look to wait a few minutes before trying to searh again."},
-			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INCORRECT_RECORD_TYPE,"An error occurred when calling SQUIZZ.com's API due to the wrong or unsupported record type being given."}
-        };
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INCORRECT_RECORD_TYPE,"An error occurred when calling SQUIZZ.com's API due to the wrong or unsupported record type being given."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_TEXT_LINES_ONLY_NOT_ALLOWED,"An error occurred when calling SQUIZZ.com's API due to the supplier organisation not allowing orders that contain only text lines."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INVOICE_LINE_NOT_MAPPED,"An error occurred when calling SQUIZZ.com's API due to a line within the invoice not able to be matched up to one of the customer's products, labour, or downloads."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INVOICE_LINE_TAXCODE_NOT_MAPPED,"An error occurred when calling SQUIZZ.com's API due to a line's taxcode within the invoice not able to be matched up to one of the customer's taxcodes."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INVOICE_SURCHARGE_NOT_MAPPED,"An error occurred when calling SQUIZZ.com's API due to a surcharge within the invoice not able to the matched up to one of the customer's surcharges."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_INVOICE_SURCHARGE_TAXCODE_NOT_MAPPED,"An error occurred when calling SQUIZZ.com's API due to a surcharge's taxcode within the invoice not able to be matched up to one of the customer's taxcodes."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_NO_ORG_SUPPLIER_ACCOUNT_ASSIGNED,"An error occurred when calling SQUIZZ.com's API due to no supplier account in the customer's organisation able to be found with the given account code."},
+			{APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_NO_ORG_SUPPLIER_ACCOUNT_SET,"An error occurred when calling SQUIZZ.com's API due to the customer organisation having no active supplier accounts assigned to the supplier organistion."}
+		};
     }
 }

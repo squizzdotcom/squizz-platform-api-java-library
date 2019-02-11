@@ -17,7 +17,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.util.Pair;
 import org.squizz.api.v1.endpoint.APIv1EndpointOrgProcurePurchaseOrderFromSupplier;
+import org.squizz.api.v1.endpoint.APIv1EndpointOrgSendCustomerInvoiceToCustomer;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponseESD;
 
 /**
@@ -342,4 +344,142 @@ public class APIv1OrgEndpointTest
         
         System.out.println("Test "+testNumber+" - Finished");
     }
+	
+	/**
+     * tests sending one or more customer invoices into the SQUIZZ.com API and having the invoices sent to a customer organisation for billing
+     * @param testNumber number of the test being performed
+     * @param apiOrgSession existing API organisation session
+     */
+    public static void testEndpointSendCustomerInvoiceToCustomer(int testNumber, APIv1OrgSession apiOrgSession)
+    {
+		System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+        System.out.println("Test "+testNumber+" - Send Customer Invoice To Customer Organisation Endpoint");
+        System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		
+		try{
+			//get the time to set to timeout the endpoint request
+			System.out.println("Enter Endpoint Timeout (Milliseconds):");
+			int timeoutMilliseconds = Integer.parseInt(reader.readLine());
+
+			//get the supplier organisation ID
+			System.out.println("Enter Customer Organisation ID:");
+			String customerOrgID = reader.readLine();
+
+			//get the supplier account code
+			System.out.println("(Optional) Enter Supplier Account Code:");
+			String supplierAccountCode = reader.readLine();
+			System.out.println("Testing sending customer invoice data");
+
+			//get the purchase order data
+			System.out.println("Enter Customer Invoice Record (in ESD record JSON form)");
+			String customerInvoiceRecordJSON = reader.readLine();
+			
+			
+			//deserialize customer invoice record
+            ObjectMapper jsonMapper = new ObjectMapper();
+            jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ESDRecordCustomerInvoice customerInvoiceRecord = jsonMapper.readValue(customerInvoiceRecordJSON, ESDRecordCustomerInvoice.class);
+            
+            //create customer invoice records
+            ArrayList<ESDRecordCustomerInvoice> customerInvoiceRecords = new ArrayList<>();
+            customerInvoiceRecords.add(customerInvoiceRecord);
+            
+            //create ESD customer invoice document
+            HashMap<String, String> configs = new HashMap<>();
+            configs.put("dataFields", "");
+            ESDocumentCustomerInvoice customerInvoiceESD = new ESDocumentCustomerInvoice(ESDocumentConstants.RESULT_SUCCESS, "successfully obtained data", customerInvoiceRecords.toArray(new ESDRecordCustomerInvoice[0]), configs);
+
+			//send customer invoice document to the API and onto the customer organisation
+			System.out.println("Call API to send customer account invoice record stored in an ESDocument");
+			APIv1EndpointResponseESD endpointResponseESD = APIv1EndpointOrgSendCustomerInvoiceToCustomer.call(apiOrgSession, timeoutMilliseconds, customerOrgID, supplierAccountCode, customerInvoiceESD);
+			ESDocumentSupplierInvoice esDocumentSupplierInvoice = (ESDocumentSupplierInvoice)endpointResponseESD.esDocument;
+
+			//check the result of sending the supplier invoice
+			if (endpointResponseESD.result.toUpperCase().equalsIgnoreCase(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS))
+			{
+				System.out.println("SUCCESS - organisation customer accounts have successfully been sent to customer organisation.");
+                System.out.println("Session ID - " + apiOrgSession.getSessionID());
+                System.out.println("Session API Version - " + apiOrgSession.getAPIVersion());
+                System.out.println("Session Exists - " + apiOrgSession.sessionExists());
+
+				//iterate through each of the returned supplier invoice(s) that the customer invoice(s) were converted from and output the details of the supplier invoices
+				if (esDocumentSupplierInvoice.dataRecords != null)
+				{
+					for (ESDRecordSupplierInvoice supplierInvoiceRecord : esDocumentSupplierInvoice.dataRecords)
+					{
+						System.out.println("\nCustomer Invoice Returned, Invoice Details: ");
+						System.out.println("Supplier Invoice Code: " + supplierInvoiceRecord.supplierInvoiceCode);
+						System.out.println("Supplier Invoice Total Cost: " + supplierInvoiceRecord.totalPriceIncTax + " (" + supplierInvoiceRecord.currencyISOCode + ")");
+						System.out.println("Supplier Invoice Total Taxes: " + supplierInvoiceRecord.totalTax + " (" + supplierInvoiceRecord.currencyISOCode + ")");
+						System.out.println("Supplier Invoice Supplier Account: " + supplierInvoiceRecord.supplierAccountCode);
+						System.out.println("Supplier Invoice Total Lines: " + supplierInvoiceRecord.totalLines);
+					}
+				}
+			}
+			else {
+				System.out.println("FAIL - organisation customer invoices failed to be sent");
+                System.out.println("Endpoint Result: " + endpointResponseESD.result);
+                System.out.println("Endpoint Result Code: " + endpointResponseESD.result_code);
+                System.out.println("Endpoint Result Message: " + endpointResponseESD.result_message);
+
+				//check that a Ecommerce standards document was returned
+				if (esDocumentSupplierInvoice != null && esDocumentSupplierInvoice.configs != null)
+				{
+					//if one or more lines in the customer invoice could not match a line to the customer organisation then find out the invoice lines that caused the problem
+					HashMap documentConfigs = esDocumentSupplierInvoice.configs;
+					if (documentConfigs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_INVOICES_WITH_UNMAPPED_LINES) || documentConfigs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_INVOICES_WITH_UNMAPPED_LINE_TAXCODES))
+					{
+						//get a list of invoice lines that could not be mapped
+						ArrayList<Pair<Integer, Integer>> unmappedLines = APIv1EndpointOrgSendCustomerInvoiceToCustomer.getUnmappedInvoiceLines(esDocumentSupplierInvoice);
+
+						//iterate through each unmapped invoice line
+						for (Pair<Integer, Integer> unmappedLine : unmappedLines)
+						{
+							//get the index of the customer invoice and line that contained the unmapped product
+							int invoiceIndex = unmappedLine.getKey();
+							int lineIndex = unmappedLine.getValue();
+
+							//check that the invoice can be found that contains the problematic line
+							if (invoiceIndex < customerInvoiceESD.dataRecords.length && lineIndex < customerInvoiceESD.dataRecords[invoiceIndex].lines.size())
+							{
+								if(documentConfigs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_INVOICES_WITH_UNMAPPED_LINE_TAXCODES)){
+									System.out.println("For customer invoice: " + customerInvoiceESD.dataRecords[invoiceIndex].customerInvoiceCode + " a matching customer's taxcode for line number: " + (lineIndex + 1) + " could not be matched up or handled.");
+								}else{
+									System.out.println("For customer invoice: " + customerInvoiceESD.dataRecords[invoiceIndex].customerInvoiceCode + " a matching customer product for line number: " + (lineIndex + 1) + " could not be matched up or handled.");
+								}
+							}
+						}
+					}
+					//if one or more surcharges in the customer invoice could not match a surcharge to the customer organisation then find out the invoice lines that caused the problem
+					else if (esDocumentSupplierInvoice.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_INVOICES_WITH_UNMAPPED_SURCHARGES) || esDocumentSupplierInvoice.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_INVOICES_WITH_UNMAPPED_SURCHARGE_TAXCODES)){
+						//get a list of invoice surcharges that could not be mapped
+						ArrayList<Pair<Integer, Integer>> unmappedSurcharges = APIv1EndpointOrgSendCustomerInvoiceToCustomer.getUnmappedInvoiceLines(esDocumentSupplierInvoice);
+
+						//iterate through each unmapped invoice surcharge
+						for (Pair<Integer, Integer> unmappedSurcharge : unmappedSurcharges)
+						{
+							//get the index of the customer invoice and surcharge that contained the unmapped surcharge
+							int invoiceIndex = unmappedSurcharge.getKey();
+							int surchargeIndex = unmappedSurcharge.getValue();
+
+							//check that the invoice can be found that contains the problematic line
+							if (invoiceIndex < customerInvoiceESD.dataRecords.length && surchargeIndex < customerInvoiceESD.dataRecords[invoiceIndex].surcharges.size())
+							{
+								if(documentConfigs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_INVOICES_WITH_UNMAPPED_SURCHARGE_TAXCODES)){
+									System.out.println("For customer invoice: " + customerInvoiceESD.dataRecords[invoiceIndex].customerInvoiceCode + " a matching customer's taxcode for surcharge line number: " + (surchargeIndex + 1) + " could not be matched up or handled.");
+								}else{
+									System.out.println("For customer invoice: " + customerInvoiceESD.dataRecords[invoiceIndex].customerInvoiceCode + " a matching customer surcharge for surcharge line number: " + (surchargeIndex + 1) + " could not be matched up or handled.");
+								}
+							}
+						}
+					}
+				}
+			}
+		}catch(Exception ex){
+            System.out.println("An error occurred when performing the test. Error: " + ex.getLocalizedMessage());
+        }
+		
+		System.out.println("Test "+testNumber+" - Finished");
+	}
 }

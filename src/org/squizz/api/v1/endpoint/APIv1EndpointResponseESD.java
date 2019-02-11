@@ -18,6 +18,10 @@ public class APIv1EndpointResponseESD
     public static final String ESD_CONFIG_ORDERS_WITH_UNMAPPED_LINES = "orders_with_unmapped_lines";
     public static final String ESD_CONFIG_ORDERS_WITH_UNPRICED_LINES = "orders_with_unpriced_lines";
     public static final String ESD_CONFIG_ORDERS_WITH_UNSTOCKED_LINES = "orders_with_unstocked_lines";
+	public static final String ESD_CONFIG_INVOICES_WITH_UNMAPPED_LINES = "invoices_with_unmapped_lines";
+	public static final String ESD_CONFIG_INVOICES_WITH_UNMAPPED_SURCHARGES = "invoices_with_unmapped_surcharges";
+	public static final String ESD_CONFIG_INVOICES_WITH_UNMAPPED_LINE_TAXCODES = "invoices_with_unmapped_line_taxcodes";
+	public static final String ESD_CONFIG_INVOICES_WITH_UNMAPPED_SURCHARGE_TAXCODES = "invoices_with_unmapped_surcharge_taxcodes";
     
     //set default values for the response
     public String result = ENDPOINT_RESULT_FAILURE;

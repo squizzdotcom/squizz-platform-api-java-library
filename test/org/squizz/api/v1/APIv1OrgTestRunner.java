@@ -82,6 +82,13 @@ public class APIv1OrgTestRunner {
                 if(testNotify.equalsIgnoreCase(ESDocumentConstants.ESD_VALUE_YES)){
                     APIv1OrgEndpointTest.testEndpointOrgProcurePurchaseOrderFromSupplier(testNumber++, apiOrgSession);
                 }
+				
+				//test sending customer invoice to customer organisation
+                System.out.println("Test Sending Customer Invoice to Customer ("+ESDocumentConstants.ESD_VALUE_YES+" or "+ESDocumentConstants.ESD_VALUE_NO+"):");
+                testNotify = reader.readLine();
+                if(testNotify.equalsIgnoreCase(ESDocumentConstants.ESD_VALUE_YES)){
+                    APIv1OrgEndpointTest.testEndpointSendCustomerInvoiceToCustomer(testNumber++, apiOrgSession);
+                }
             }catch(Exception ex){
                 System.out.println("Unable to read line.");
             }
