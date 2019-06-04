@@ -1,5 +1,5 @@
 /**
-* Copyright (C) 2017 Squizz PTY LTD
+* Copyright (C) 2019 Squizz PTY LTD
 * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 * You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.
@@ -15,7 +15,7 @@ import java.util.HashMap;
 /**
  * Shows an example of creating a organisation session with the SQUIZZ.com platform's API, then imports organisation data into the platform
  */
-public class APIv1ExampleRunnerImportOrgESDData 
+public class APIv1ExampleRunnerImportOrgESDDataTaxcodes 
 {
 	public static void main(String[] args)
     {
@@ -49,7 +49,7 @@ public class APIv1ExampleRunnerImportOrgESDData
 			System.out.println("FAIL - API session failed to be created. Reason: " + endpointResponse.result_message  + " Error Code: " + endpointResponse.result_code);
 		}
 		
-		//import organisation data if the API was successfully created
+		//import organisation taxcode data if the API was successfully created
 		if(apiOrgSession.sessionExists())
 		{
 			//create taxcode records
@@ -95,9 +95,9 @@ public class APIv1ExampleRunnerImportOrgESDData
 			
 			//check that the data successfully imported
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
-                System.out.println("SUCCESS - organisation data successfully imported into the platform");
+                System.out.println("SUCCESS - taxcode data successfully imported into the platform against the organisation");
             }else{
-                System.out.println("FAIL - organisation data failed to be imported into the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+                System.out.println("FAIL - taxcode data failed to be imported into the platform against the organisation. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
             }
 		}
 		

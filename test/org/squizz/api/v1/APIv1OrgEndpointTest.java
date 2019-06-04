@@ -175,7 +175,7 @@ public class APIv1OrgEndpointTest
             System.out.println("Call API to import organisation data stored in an ESDocument");
             APIv1EndpointResponseESD endpointResponse = APIv1EndpointOrgImportESDocument.call(apiOrgSession, timeoutMilliseconds, APIv1EndpointOrgImportESDocument.IMPORT_TYPE_ID_TAXCODES, taxcodeESD);
             
-            //check the result of validating the certificate
+            //check the result of importing the taxcode data
             if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
                 System.out.println("SUCCESS - organisation ESDocument data has successfully been imported.");
                 System.out.println("Session ID - " + apiOrgSession.getSessionID());

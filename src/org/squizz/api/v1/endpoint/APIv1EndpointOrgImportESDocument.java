@@ -28,8 +28,10 @@ public class APIv1EndpointOrgImportESDocument
     public static final int IMPORT_TYPE_ID_PRODUCT_PRICE_LEVEL_UNIT_PRICING = 4;
     public static final int IMPORT_TYPE_ID_PRODUCT_PRICE_LEVEL_QUANTITY_PRICING = 6;
     public static final int IMPORT_TYPE_ID_PRODUCT_CUSTOMER_ACCOUNT_PRICING = 7;
+	public static final int IMPORT_TYPE_ID_CATEGORIES = 8;
     public static final int IMPORT_TYPE_ID_ALTERNATE_CODES = 9;
     public static final int IMPORT_TYPE_ID_PRODUCT_STOCK_QUANTITIES = 10;
+	public static final int IMPORT_TYPE_ID_ATTRIBUTES = 11;
     public static final int IMPORT_TYPE_ID_SALES_REPRESENTATIVES = 16;
     public static final int IMPORT_TYPE_ID_CUSTOMER_ACCOUNTS = 17;
     public static final int IMPORT_TYPE_ID_SUPPLIER_ACCOUNTS = 18;
@@ -40,6 +42,9 @@ public class APIv1EndpointOrgImportESDocument
     public static final int IMPORT_TYPE_ID_SURCHARGES = 26;
     public static final int IMPORT_TYPE_ID_PAYMENT_TYPES = 27;
     public static final int IMPORT_TYPE_ID_SELL_UNITS = 28;
+	public static final int IMPORT_TYPE_ID_MAKERS = 44;
+	public static final int IMPORT_TYPE_ID_MAKER_MODELS = 45;
+	public static final int IMPORT_TYPE_ID_MAKER_MODEL_MAPPINGS = 46;
     
     /**
      * Calls the platform's API endpoint and pushes up and import organisation data in a Ecommerce Standards Document of a specified type
