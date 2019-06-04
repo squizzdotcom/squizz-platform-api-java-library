@@ -1,7 +1,7 @@
 package org.squizz.api.v1.endpoint;
 
 /**
-* Copyright (C) 2017 Squizz PTY LTD
+* Copyright (C) 2019 Squizz PTY LTD
 * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 * You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.
@@ -29,8 +29,13 @@ import org.squizz.api.v1.endpoint.APIv1EndpointResponseESD;
 public class APIv1EndpointOrgRetrieveESDocument
 {
     public static final int RETRIEVE_TYPE_ID_PRODUCTS = 3;
-    public static final int RETRIEVE_TYPE_ID_PRICING = 37;
+	public static final int RETRIEVE_TYPE_ID_CATEGORIES = 8;
     public static final int RETRIEVE_TYPE_ID_PRODUCT_STOCK = 10;
+	public static final int RETRIEVE_TYPE_ID_ATTRIBUTES = 11;
+	public static final int RETRIEVE_TYPE_ID_PRICING = 37;
+	public static final int RETRIEVE_TYPE_ID_MAKERS = 44;
+	public static final int RETRIEVE_TYPE_ID_MAKER_MODELS = 45;
+	public static final int RETRIEVE_TYPE_ID_MAKER_MODEL_MAPPINGS = 46;
     
     /**
      * Calls the platform's API endpoint and gets organisation data in a Ecommerce Standards Document of a specified type
@@ -39,9 +44,12 @@ public class APIv1EndpointOrgRetrieveESDocument
      * @param retrieveTypeID ID of the type of data to retrieve
      * @param supplierOrgID unique ID of the supplier organisation in the SQUIZZ.com platform to obtain data from
      * @param customerAccountCode code of the supplier organisation's customer account. Customer account only needs to be set if the supplier organisation has assigned multiple accounts to the organisation logged into the API session (customer org) and account specific data is being obtained
+	 * @param recordsMaxAmount maximum number of records to obtain from the platform
+	 * @param recordsStartIndex index containing the position of records to start obtaining from the server
+	 * @param requestParameters set additional parameters to in the request URL. Ensure parameter values are URI encoded
      * @return response from calling the API endpoint
      */
-    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, int retrieveTypeID, String supplierOrgID, String customerAccountCode)
+    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, int retrieveTypeID, String supplierOrgID, String customerAccountCode, int recordsMaxAmount, int recordsStartIndex, String requestParameters)
     {
         ArrayList<Pair<String, String>> requestHeaders = new ArrayList<>();
         APIv1EndpointResponseESD endpointResponse = new APIv1EndpointResponseESD();
@@ -50,7 +58,14 @@ public class APIv1EndpointOrgRetrieveESDocument
         
         try{
             //set endpoint parameters
-            String endpointParams = "data_type_id="+retrieveTypeID + "&supplier_org_id=" + URLEncoder.encode(supplierOrgID, StandardCharsets.UTF_8.name()) + "&customer_account_code="+URLEncoder.encode(customerAccountCode, StandardCharsets.UTF_8.name());
+            String endpointParams = 
+				"data_type_id="+retrieveTypeID + 
+				"&supplier_org_id=" + 
+				URLEncoder.encode(supplierOrgID, StandardCharsets.UTF_8.name()) + 
+				"&customer_account_code="+URLEncoder.encode(customerAccountCode, StandardCharsets.UTF_8.name())+
+				"&records_max_amount="+recordsMaxAmount+
+				"&records_start_index="+recordsStartIndex+ 
+				(requestParameters!= null && !requestParameters.isEmpty()? "&"+requestParameters: "");
             
             //create JSON deserializer to interpret the response from the endpoint
             ObjectMapper jsonMapper = new ObjectMapper();
@@ -66,6 +81,21 @@ public class APIv1EndpointOrgRetrieveESDocument
                     break;
                 case RETRIEVE_TYPE_ID_PRODUCT_STOCK:
                     endpointJSONReader = jsonMapper.readerFor(ESDocumentStockQuantity.class);
+                    break;
+				case RETRIEVE_TYPE_ID_CATEGORIES:
+                    endpointJSONReader = jsonMapper.readerFor(ESDocumentCategory.class);
+                    break;
+				case RETRIEVE_TYPE_ID_ATTRIBUTES:
+                    endpointJSONReader = jsonMapper.readerFor(ESDocumentAttribute.class);
+                    break;
+				case RETRIEVE_TYPE_ID_MAKERS:
+                    endpointJSONReader = jsonMapper.readerFor(ESDocumentMaker.class);
+                    break;
+				case RETRIEVE_TYPE_ID_MAKER_MODELS:
+                    endpointJSONReader = jsonMapper.readerFor(ESDocumentMakerModel.class);
+                    break;
+				case RETRIEVE_TYPE_ID_MAKER_MODEL_MAPPINGS:
+                    endpointJSONReader = jsonMapper.readerFor(ESDocumentMakerModelMapping.class);
                     break;
                 default:
                     callEndpoint  = false;
@@ -99,4 +129,18 @@ public class APIv1EndpointOrgRetrieveESDocument
         
         return endpointResponse;
     }
+	
+	/**
+     * Calls the platform's API endpoint and gets organisation data in a Ecommerce Standards Document of a specified type
+     * @param apiOrgSession existing organisation API session
+     * @param endpointTimeoutMilliseconds amount of milliseconds to wait after calling the the API before giving up, set a positive number
+     * @param retrieveTypeID ID of the type of data to retrieve
+     * @param supplierOrgID unique ID of the supplier organisation in the SQUIZZ.com platform to obtain data from
+     * @param customerAccountCode code of the supplier organisation's customer account. Customer account only needs to be set if the supplier organisation has assigned multiple accounts to the organisation logged into the API session (customer org) and account specific data is being obtained
+     * @return response from calling the API endpoint
+     */
+    public static APIv1EndpointResponseESD call(APIv1OrgSession apiOrgSession, int endpointTimeoutMilliseconds, int retrieveTypeID, String supplierOrgID, String customerAccountCode)
+    {
+		return call(apiOrgSession, endpointTimeoutMilliseconds, retrieveTypeID, supplierOrgID, customerAccountCode, 5000, 0, "");
+	}
 }

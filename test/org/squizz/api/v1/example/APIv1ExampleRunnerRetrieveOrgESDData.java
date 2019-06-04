@@ -1,5 +1,5 @@
 /**
-* Copyright (C) 2017 Squizz PTY LTD
+* Copyright (C) 2019 Squizz PTY LTD
 * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 * You should have received a copy of the GNU General Public License along with this program.  If not, see http://www.gnu.org/licenses/.
@@ -75,16 +75,16 @@ public class APIv1ExampleRunnerRetrieveOrgESDData
 			System.out.println("FAIL - API session failed to be created. Reason: " + endpointResponse.result_message  + " Error Code: " + endpointResponse.result_code);
 		}
 		
-		//import organisation data if the API was successfully created
+		//retrieve organisation data if the API was successfully created
 		if(apiOrgSession.sessionExists())
 		{   
 			//after 60 seconds give up on waiting for a response from the API when creating the notification
 			int timeoutMilliseconds = 60000;
 			
-			//call the platform's API to import in the organisation's data, which for this example is product pricing
+			//call the platform's API to retrieve the organisation's data, which for this example is product pricing
 			APIv1EndpointResponseESD endpointResponseESD = APIv1EndpointOrgRetrieveESDocument.call(apiOrgSession, timeoutMilliseconds, recordType, supplierOrgID, customerAccountCode);
 			
-			//check that the data successfully imported
+			//check that the data successfully retrieved
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
                 System.out.println("SUCCESS - organisation data successfully obtained from the platform");
 				DecimalFormat decimalFormat = new DecimalFormat("#.####");
@@ -133,7 +133,7 @@ public class APIv1ExampleRunnerRetrieveOrgESDData
 							int i=0;
 							for(ESDRecordProduct productRecord: esDocumentProduct.dataRecords)
 							{    
-								//output details of the price record
+								//output details of the product record
 								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
 								System.out.println("Product Record #: " + i);
 								System.out.println("  Key Product ID: " + productRecord.keyProductID);
@@ -176,7 +176,7 @@ public class APIv1ExampleRunnerRetrieveOrgESDData
 							int i=0;
 							for(ESDRecordStockQuantity stockQuantityRecord: esDocumentStockQuantity.dataRecords)
 							{    
-								//output details of the price record
+								//output details of the product stock record
 								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
 								System.out.println("Product Record #: " + i);
 								System.out.println("  Key Product ID: " + stockQuantityRecord.keyProductID);
