@@ -159,7 +159,7 @@ public class ExampleRunner
 
 ### Import Organisation Data Endpoint
 The SQUIZZ.com platform's API has an endpoint that allows a wide variety of different types of data to be imported into the platform against an organisation. 
-This organisational data includes taxcodes, products, customer accounts, supplier accounts. pricing, price levels, locations, and many other kinds of data.
+This organisational data includes taxcodes, products, customer accounts, supplier accounts. pricing, price levels, locations, maker, and many other kinds of data.
 This data is used to allow the organisation to buy and sell products, as well manage customers, suppliers, employees, and other people.
 Each type of data needs to be imported as an "Ecommerce Standards Document" that contains one or more records. Use the Ecommerce Standards library to easily create these documents and records.
 When importing one type of organisational data, it is important to import the full data set, otherwise the platform will deactivate unimported data.
