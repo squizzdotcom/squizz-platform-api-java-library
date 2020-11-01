@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.util.Pair;
+import org.squizz.api.v1.endpoint.APIv1EndpointOrgImportSalesOrder;
 import org.squizz.api.v1.endpoint.APIv1EndpointOrgProcurePurchaseOrderFromSupplier;
 import org.squizz.api.v1.endpoint.APIv1EndpointOrgSendCustomerInvoiceToCustomer;
 import org.squizz.api.v1.endpoint.APIv1EndpointResponseESD;
@@ -186,6 +187,185 @@ public class APIv1OrgEndpointTest
                 System.out.println("Endpoint Result: " + endpointResponse.result);
                 System.out.println("Endpoint Result Code: " + endpointResponse.result_code);
                 System.out.println("Endpoint Result Message: " + endpointResponse.result_message);
+            }
+        }catch(Exception ex){
+            System.out.println("An error occurred when performing the test. Error: " + ex.getLocalizedMessage());
+        }
+        
+        System.out.println("Test "+testNumber+" - Finished");
+    }
+	
+	/**
+     * tests importing one or more sales orders of an organisation's own sales orders into the SQUIZZ.com API, having the order(s) validated, optionally repriced, and processed
+     * @param testNumber number of the test being performed
+     * @param apiOrgSession existing API organisation session
+     */
+    public static void testEndpointOrgImportOrderSaleESDocument(int testNumber, APIv1OrgSession apiOrgSession)
+    {
+        ESDocumentOrderSale esDocumentOrderSale = null;
+		ESDocumentOrderSale esDocumentOrderSaleReturned = null;
+                
+        System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+        System.out.println("Test "+testNumber+" - Import Sales Order Organisation Endpoint");
+        System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        
+        try{
+            //get the time to set to timeout the endpoint request
+            System.out.println("Enter Endpoint Timeout (Milliseconds):");
+            int timeoutMilliseconds = Integer.parseInt(reader.readLine());
+            
+            //check if the sales order should be repriced
+            System.out.println("Type either "+ESDocumentConstants.ESD_VALUE_YES+" or "+ESDocumentConstants.ESD_VALUE_NO+" on whether the sales order should be repriced:");
+            String repriceOrder = reader.readLine();
+            
+            //get the sales order data
+            System.out.println("Enter Sales Order Record (in ESD record JSON form)");
+            String salesOrderRecordJSON = reader.readLine();
+            
+            //deserialize sales order record
+            ObjectMapper jsonMapper = new ObjectMapper();
+            jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ESDRecordOrderSale salesOrderRecord = jsonMapper.readValue(salesOrderRecordJSON, ESDRecordOrderSale.class);
+            
+            //create sales order records
+            ArrayList<ESDRecordOrderSale> salesOrderRecords = new ArrayList<>();
+            salesOrderRecords.add(salesOrderRecord);
+            
+            //create ESD sales order document
+            HashMap<String, String> configs = new HashMap<>();
+            configs.put("dataFields", "");
+            ESDocumentOrderSale orderSaleESD = new ESDocumentOrderSale(ESDocumentConstants.RESULT_SUCCESS, "successfully obtained data", salesOrderRecords.toArray(new ESDRecordOrderSale[0]), configs);
+            
+            //call API endpoint in the SQUIZZ.com platform to import the organisation's sales order
+            System.out.println("Call API to import organisation sales order stored in an ESDocument");
+            APIv1EndpointResponseESD endpointResponse = APIv1EndpointOrgImportSalesOrder.call(apiOrgSession, timeoutMilliseconds, orderSaleESD, (repriceOrder.equalsIgnoreCase(ESDocumentConstants.ESD_VALUE_YES)));
+            esDocumentOrderSaleReturned = (ESDocumentOrderSale)endpointResponse.esDocument;
+            
+            //check the result of procuring the purchase orders
+            if(endpointResponse.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
+                System.out.println("SUCCESS - organisation sales order(s) have successfully been sent to organisation.");
+                System.out.println("Session ID - " + apiOrgSession.getSessionID());
+                System.out.println("Session API Version - " + apiOrgSession.getAPIVersion());
+                System.out.println("Session Exists - " + apiOrgSession.sessionExists());
+                
+                //iterate through each of the returned sales orders and output the details of the sales orders
+                if(esDocumentOrderSaleReturned.dataRecords != null){
+                    for (ESDRecordOrderSale salesOrderReturnedRecord : esDocumentOrderSaleReturned.dataRecords){
+                        System.out.println("\nSales Order Returned, Order Details: ");
+                        System.out.println("Sales Order Code: " + salesOrderReturnedRecord.salesOrderCode);
+                        System.out.println("Sales Order Total Cost: " + salesOrderReturnedRecord.totalPriceIncTax + " (" + salesOrderReturnedRecord.currencyISOCode + ")");
+                        System.out.println("Sales Order Total Taxes: " + salesOrderReturnedRecord.totalTax + " (" + salesOrderReturnedRecord.currencyISOCode + ")");
+                        System.out.println("Sales Order Customer Account: " + salesOrderReturnedRecord.customerAccountCode);
+                        System.out.println("Sales Order Total Lines: " + salesOrderReturnedRecord.totalLines);
+                    }
+                }
+            }else{
+                System.out.println("FAIL - organisation sales order(s) failed to be processed");
+                System.out.println("Endpoint Result: " + endpointResponse.result);
+                System.out.println("Endpoint Result Code: " + endpointResponse.result_code);
+                System.out.println("Endpoint Result Message: " + endpointResponse.result_message);
+                
+                //check if the server response returned back a Ecommerce Standards Document
+				if(esDocumentOrderSaleReturned != null)
+				{
+					switch(endpointResponse.result_code)
+					{
+						//if one or more products in the sales order could not match the organisation's products then find out the order lines caused the problem
+						case APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_PRODUCT_NOT_MATCHED:
+							//get a list of order lines that could not be mapped
+							ArrayList<Pair<Integer, Integer>> unmatchedLines = APIv1EndpointOrgImportSalesOrder.getUnmatchedOrderLines(esDocumentOrderSaleReturned);
+
+							//iterate through each unmatched order line
+							for(Pair<Integer, Integer> unmatchedLine : unmatchedLines){
+								//get the index of the sales order and line that contained the unmatched product
+								int orderIndex = unmatchedLine.getKey();
+								int lineIndex = unmatchedLine.getValue();
+
+								//check that the order can be found that contains the problematic line
+								if(orderIndex < orderSaleESD.dataRecords.length && lineIndex < orderSaleESD.dataRecords[orderIndex].lines.size()){
+									System.out.println("For sales order: "+ orderSaleESD.dataRecords[orderIndex].salesOrderCode + " a matching product for line number: " + (lineIndex+1) + " could not be found.");
+								}
+							}
+
+							break;
+
+						//if one or more products in the sales order could not be priced then find the order line that caused the problem
+						case APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_LINE_PRICING_MISSING:
+							//get a list of order lines that could not be priced
+							ArrayList<Pair<Integer, Integer>> unpricedLines = APIv1EndpointOrgImportSalesOrder.getUnpricedOrderLines(esDocumentOrderSaleReturned);
+
+							//iterate through each unpriced order line
+							for(Pair<Integer, Integer> unpricedLine : unpricedLines){
+								//get the index of the sales order and line that contained the unpriced product
+								int orderIndex = unpricedLine.getKey();
+								int lineIndex = unpricedLine.getValue();
+
+								//check that the order can be found that contains the problematic line
+								if(orderIndex < orderSaleESD.dataRecords.length && lineIndex < orderSaleESD.dataRecords[orderIndex].lines.size()){
+									System.out.println("For sales order: "+ orderSaleESD.dataRecords[orderIndex].salesOrderCode + " has not set pricing for line number: " + (lineIndex+1));
+								}
+							}
+
+							break;
+
+						case APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_SURCHARGE_NOT_FOUND:
+							//get a list of order surcharges that could not be matched
+							ArrayList<Pair<Integer, Integer>> unmappedSurcharges = APIv1EndpointOrgImportSalesOrder.getUnmatchedOrderSurcharges(esDocumentOrderSaleReturned);
+
+							//iterate through each unmatched order surcharge
+							for(Pair<Integer, Integer> unmappedSurcharge : unmappedSurcharges){
+								//get the index of the sales order and surcharge that contained the unmapped surcharge
+								int orderIndex = unmappedSurcharge.getKey();
+								int surchargeIndex = unmappedSurcharge.getValue();
+
+								//check that the order can be found that contains the problematic surcharge
+								if(orderIndex < orderSaleESD.dataRecords.length && surchargeIndex < orderSaleESD.dataRecords[orderIndex].surcharges.size()){
+									System.out.println("For sales order: "+ orderSaleESD.dataRecords[orderIndex].salesOrderCode + " a matching surcharge for surcharge number: " + (surchargeIndex+1) + " could not be found.");
+								}
+							}
+
+							break;
+
+						//if one or more surcharges in the sales order could not be priced then find the order surcharge that caused the problem
+						case APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_SURCHARGE_PRICING_MISSING:
+
+							//get a list of order surcharges that could not be priced
+							ArrayList<Pair<Integer, Integer>> unpricedSurcharges = APIv1EndpointOrgImportSalesOrder.getUnpricedOrderSurcharges(esDocumentOrderSaleReturned);
+
+							//iterate through each unpriced order surcharge
+							for(Pair<Integer, Integer> unmappedSurcharge : unpricedSurcharges){
+								//get the index of the purchase order and surcharge that contained the unpriced surcharge
+								int orderIndex = unmappedSurcharge.getKey();
+								int surchargeIndex = unmappedSurcharge.getValue();
+
+								//check that the order can be found that contains the problematic surcharge
+								if(orderIndex < orderSaleESD.dataRecords.length && surchargeIndex < orderSaleESD.dataRecords[orderIndex].surcharges.size()){
+									System.out.println("For sales order: "+ orderSaleESD.dataRecords[orderIndex].salesOrderCode + " has not set pricing for surcharge number: " + (surchargeIndex+1));
+								}
+							}
+
+							break;
+
+						case APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_PAYMENT_NOT_MATCHED:
+							//get a list of order payments that could not be mapped
+							ArrayList<Pair<Integer, Integer>> unmappedPayments = APIv1EndpointOrgImportSalesOrder.getUnmatchedOrderPayments(esDocumentOrderSaleReturned);
+
+							//iterate through each unmapped order payment
+							for(Pair<Integer, Integer> unmappedPayment : unmappedPayments){
+								//get the index of the purchase order and payment that contained the unmapped payment
+								int orderIndex = unmappedPayment.getKey();
+								int paymentIndex = unmappedPayment.getValue();
+
+								//check that the order can be found that contains the problematic payment
+								if(orderIndex < orderSaleESD.dataRecords.length && paymentIndex < orderSaleESD.dataRecords[orderIndex].payments.size()){
+									System.out.println("For sales order: "+ orderSaleESD.dataRecords[orderIndex].salesOrderCode + " a matching payment for payment number: " + (paymentIndex+1) + " could not be found.");
+								}
+							}
+
+							break;
+					}
+				}
             }
         }catch(Exception ex){
             System.out.println("An error occurred when performing the test. Error: " + ex.getLocalizedMessage());
