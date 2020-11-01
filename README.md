@@ -340,6 +340,8 @@ Each sales order needs to be imported as an "Ecommerce Standards Document" that 
 Read [https://www.squizz.com/docs/squizz/Platform-API-Endpoint:-Import-Organisation-Sales-Order.html](https://www.squizz.com/docs/squizz/Platform-API-Endpoint:-Import-Organisation-Sales-Order.html) for more documentation about the endpoint and its requirements.
 See the example below on how the call the Import Organisation Sales Order ESD Data endpoint. Note that a session must first be created in the API before calling the endpoint.
 
+![alt tag](https://attach.squizz.com/doc_centre/1/files/images/masters/squizz-platform-api-import-sales-order-diagram[130].png)
+
 ```java
 import org.squizz.api.v1.*;
 import org.squizz.api.v1.endpoint.*;
@@ -354,18 +356,18 @@ import javafx.util.Pair;
 public class APIv1ExampleRunnerImportOrgESDDataOrderSales 
 {
 	public static void main(String[] args)
-    {
-        //check that the required arguments have been given
-        if(args.length < 4){
-            System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [rePriceOrder]");
-            return;
-        }
-        
+	{
+		//check that the required arguments have been given
+		if(args.length < 4){
+			System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [rePriceOrder]");
+			return;
+		}
+		
 		//obtain or load in an organisation's API credentials, in this example from command line arguments
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
-        int sessionTimeoutMilliseconds = 20000;
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
 		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
@@ -388,61 +390,61 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 		//import sales order if the API was successfully created
 		if(apiOrgSession.sessionExists())
 		{
-            //create sales order record to import
-            ESDRecordOrderSale salesOrderRecord = new ESDRecordOrderSale();
-            
-            //set data within the sales order
-            salesOrderRecord.keySalesOrderID = "111";
-            salesOrderRecord.salesOrderCode = "SOEXAMPLE-678";
-            salesOrderRecord.salesOrderNumber = "678";
-            salesOrderRecord.salesOrderNumber = "678";
-            salesOrderRecord.instructions = "Leave goods at the back entrance";
-            salesOrderRecord.keyCustomerAccountID = "3";
-            salesOrderRecord.customerAccountCode = "CUS-003";
+			//create sales order record to import
+			ESDRecordOrderSale salesOrderRecord = new ESDRecordOrderSale();
+			
+			//set data within the sales order
+			salesOrderRecord.keySalesOrderID = "111";
+			salesOrderRecord.salesOrderCode = "SOEXAMPLE-678";
+			salesOrderRecord.salesOrderNumber = "678";
+			salesOrderRecord.salesOrderNumber = "678";
+			salesOrderRecord.instructions = "Leave goods at the back entrance";
+			salesOrderRecord.keyCustomerAccountID = "3";
+			salesOrderRecord.customerAccountCode = "CUS-003";
 			salesOrderRecord.customerAccountName = "Acme Industries";
 			salesOrderRecord.customerEntity = ESDocumentConstants.ENTITY_TYPE_ORG;
 			salesOrderRecord.customerOrgName = "Acme Industries Pty Ltd";
-            
-            //set delivery address that ordered goods will be delivered to
-            salesOrderRecord.deliveryAddress1 = "32";
-            salesOrderRecord.deliveryAddress2 = "Main Street";
-            salesOrderRecord.deliveryAddress3 = "Melbourne";
-            salesOrderRecord.deliveryRegionName = "Victoria";
-            salesOrderRecord.deliveryCountryName = "Australia";
-            salesOrderRecord.deliveryPostcode = "3000";
-            salesOrderRecord.deliveryOrgName = "Acme Industries";
-            salesOrderRecord.deliveryContact = "Jane Doe";
-            
-            //set billing address that the order will be billed to for payment
-            salesOrderRecord.billingAddress1 = "43";
-            salesOrderRecord.billingAddress2 = " High Street";
-            salesOrderRecord.billingAddress3 = "Melbourne";
-            salesOrderRecord.billingRegionName = "Victoria";
-            salesOrderRecord.billingCountryName = "Australia";
-            salesOrderRecord.billingPostcode = "3000";
-            salesOrderRecord.billingOrgName = "Acme Industries International";
-            salesOrderRecord.billingContact = "John Citizen";
-            
-            //create an array of sales order lines
-            ArrayList<ESDRecordOrderSaleLine> orderLines = new ArrayList<>();
-            
-            //create sales order line record
-            ESDRecordOrderSaleLine orderProduct = new ESDRecordOrderSaleLine();
-            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
-            orderProduct.productCode = "TEA-TOWEL-GREEN";
-            orderProduct.productName = "Green tea towel - 30 x 6 centimetres";
-            orderProduct.unitName = "EACH";
+			
+			//set delivery address that ordered goods will be delivered to
+			salesOrderRecord.deliveryAddress1 = "32";
+			salesOrderRecord.deliveryAddress2 = "Main Street";
+			salesOrderRecord.deliveryAddress3 = "Melbourne";
+			salesOrderRecord.deliveryRegionName = "Victoria";
+			salesOrderRecord.deliveryCountryName = "Australia";
+			salesOrderRecord.deliveryPostcode = "3000";
+			salesOrderRecord.deliveryOrgName = "Acme Industries";
+			salesOrderRecord.deliveryContact = "Jane Doe";
+			
+			//set billing address that the order will be billed to for payment
+			salesOrderRecord.billingAddress1 = "43";
+			salesOrderRecord.billingAddress2 = " High Street";
+			salesOrderRecord.billingAddress3 = "Melbourne";
+			salesOrderRecord.billingRegionName = "Victoria";
+			salesOrderRecord.billingCountryName = "Australia";
+			salesOrderRecord.billingPostcode = "3000";
+			salesOrderRecord.billingOrgName = "Acme Industries International";
+			salesOrderRecord.billingContact = "John Citizen";
+			
+			//create an array of sales order lines
+			ArrayList<ESDRecordOrderSaleLine> orderLines = new ArrayList<>();
+			
+			//create sales order line record
+			ESDRecordOrderSaleLine orderProduct = new ESDRecordOrderSaleLine();
+			orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
+			orderProduct.productCode = "TEA-TOWEL-GREEN";
+			orderProduct.productName = "Green tea towel - 30 x 6 centimetres";
+			orderProduct.unitName = "EACH";
 			orderProduct.keySellUnitID = "EA";
-            orderProduct.quantity = 4;
-            orderProduct.sellUnitBaseQuantity = 4;
-            //pricing data only needs to be set if the order isn't being repriced
-            orderProduct.priceExTax = 5.00;
-            orderProduct.priceIncTax = 5.50;
-            orderProduct.priceTax = 0.50;
-            orderProduct.priceTotalIncTax = 22.00;
-            orderProduct.priceTotalExTax = 20.00;
-            orderProduct.priceTotalTax = 2.00;
-            orderLines.add(orderProduct);
+			orderProduct.quantity = 4;
+			orderProduct.sellUnitBaseQuantity = 4;
+			//pricing data only needs to be set if the order isn't being repriced
+			orderProduct.priceExTax = 5.00;
+			orderProduct.priceIncTax = 5.50;
+			orderProduct.priceTax = 0.50;
+			orderProduct.priceTotalIncTax = 22.00;
+			orderProduct.priceTotalExTax = 20.00;
+			orderProduct.priceTotalTax = 2.00;
+			orderLines.add(orderProduct);
 			
 			//add taxes to the line
 			orderProduct.taxes = new ArrayList<>();
@@ -456,31 +458,31 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 			orderProductTax.quantity = 4;
 			orderProductTax.priceTotalTax = 2.00;
 			orderProduct.taxes.add(orderProductTax);
-            
-            //add a 2nd sales order line record that is a text line
-            orderProduct = new ESDRecordOrderSaleLine();
-            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_TEXT;
-            orderProduct.productCode = "TEA-TOWEL-BLUE";
-            orderProduct.textDescription = "Please bundle tea towels into a box";
-            orderLines.add(orderProduct);
-            
-            //add a 3rd sales order line record
-            orderProduct = new ESDRecordOrderSaleLine();
-            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
-            orderProduct.productCode = "TEA-TOWEL-BLUE";
-            orderProduct.productName = "Blue tea towel - 30 x 6 centimetres";
+			
+			//add a 2nd sales order line record that is a text line
+			orderProduct = new ESDRecordOrderSaleLine();
+			orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_TEXT;
+			orderProduct.productCode = "TEA-TOWEL-BLUE";
+			orderProduct.textDescription = "Please bundle tea towels into a box";
+			orderLines.add(orderProduct);
+			
+			//add a 3rd sales order line record
+			orderProduct = new ESDRecordOrderSaleLine();
+			orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
+			orderProduct.productCode = "TEA-TOWEL-BLUE";
+			orderProduct.productName = "Blue tea towel - 30 x 6 centimetres";
 			orderProduct.unitName = "BOX";
 			orderProduct.keySellUnitID = "BOX-OF-10";
-            orderProduct.quantity = 2;
+			orderProduct.quantity = 2;
 			orderProduct.sellUnitBaseQuantity = 20;
 			//pricing data only needs to be set if the order isn't being repriced
-            orderProduct.priceExTax = 10.00;
-            orderProduct.priceIncTax = 11.00;
-            orderProduct.priceTax = 1.00;
-            orderProduct.priceTotalIncTax = 22.00;
-            orderProduct.priceTotalExTax = 20.00;
-            orderProduct.priceTotalTax = 2.00;
-            orderLines.add(orderProduct);
+			orderProduct.priceExTax = 10.00;
+			orderProduct.priceIncTax = 11.00;
+			orderProduct.priceTax = 1.00;
+			orderProduct.priceTotalIncTax = 22.00;
+			orderProduct.priceTotalExTax = 20.00;
+			orderProduct.priceTotalTax = 2.00;
+			orderLines.add(orderProduct);
 			
 			//add taxes to the line
 			orderProduct.taxes = new ArrayList<>();
@@ -494,24 +496,24 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 			orderProductTax.taxRate = 10;
 			orderProductTax.priceTotalTax = 2.00;
 			orderProduct.taxes.add(orderProductTax);
-            
-            //add order lines to the order
-            salesOrderRecord.lines = orderLines;
+			
+			//add order lines to the order
+			salesOrderRecord.lines = orderLines;
 			
 			//create an array of sales order surcharges
-            ArrayList<ESDRecordOrderSurcharge> orderSurcharges = new ArrayList<>();
-            
-            //create sales order surcharge record
-            ESDRecordOrderSurcharge orderSurcharge = new ESDRecordOrderSurcharge();
-            orderSurcharge.surchargeCode = "FREIGHT-FEE";
-            orderSurcharge.surchargeLabel = "Freight Surcharge";
+			ArrayList<ESDRecordOrderSurcharge> orderSurcharges = new ArrayList<>();
+			
+			//create sales order surcharge record
+			ESDRecordOrderSurcharge orderSurcharge = new ESDRecordOrderSurcharge();
+			orderSurcharge.surchargeCode = "FREIGHT-FEE";
+			orderSurcharge.surchargeLabel = "Freight Surcharge";
 			orderSurcharge.surchargeDescription = "Cost of freight delivery";
 			orderSurcharge.keySurchargeID = "SURCHARGE-1";
 			//pricing data only needs to be set if the order isn't being repriced
-            orderSurcharge.priceExTax = 3.00;
-            orderSurcharge.priceIncTax = 3.30;
-            orderSurcharge.priceTax = 0.30;
-            orderSurcharges.add(orderSurcharge);
+			orderSurcharge.priceExTax = 3.00;
+			orderSurcharge.priceIncTax = 3.30;
+			orderSurcharge.priceTax = 0.30;
+			orderSurcharges.add(orderSurcharge);
 			
 			//add taxes to the surcharge
 			orderSurcharge.taxes = new ArrayList<>();
@@ -527,16 +529,16 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 			orderSurcharge.taxes.add(orderSurchargeTax);
 			
 			//create 2nd sales order surcharge record
-            orderSurcharge = new ESDRecordOrderSurcharge();
-            orderSurcharge.surchargeCode = "PAYMENT-FEE";
-            orderSurcharge.surchargeLabel = "Credit Card Surcharge";
+			orderSurcharge = new ESDRecordOrderSurcharge();
+			orderSurcharge.surchargeCode = "PAYMENT-FEE";
+			orderSurcharge.surchargeLabel = "Credit Card Surcharge";
 			orderSurcharge.surchargeDescription = "Cost of Credit Card Payment";
 			orderSurcharge.keySurchargeID = "SURCHARGE-2";
 			//pricing data only needs to be set if the order isn't being repriced
-            orderSurcharge.priceExTax = 5.00;
-            orderSurcharge.priceIncTax = 5.50;
-            orderSurcharge.priceTax = 0.50;
-            orderSurcharges.add(orderSurcharge);
+			orderSurcharge.priceExTax = 5.00;
+			orderSurcharge.priceIncTax = 5.50;
+			orderSurcharge.priceTax = 0.50;
+			orderSurcharges.add(orderSurcharge);
 			
 			//add taxes to the 2nd surcharge
 			orderSurcharge.taxes = new ArrayList<>();
@@ -552,31 +554,31 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 			orderSurcharge.taxes.add(orderSurchargeTax);
 			
 			//add surcharges to the order
-            salesOrderRecord.surcharges = orderSurcharges;
+			salesOrderRecord.surcharges = orderSurcharges;
 			
 			//create an array of sales order payments
-            ArrayList<ESDRecordOrderPayment> orderPayments = new ArrayList<>();
-            
-            //create sales order payment record
-            ESDRecordOrderPayment orderPayment = new ESDRecordOrderPayment();
-            orderPayment.paymentMethod = ESDocumentConstants.PAYMENT_METHOD_CREDIT;
-            orderPayment.paymentProprietaryCode = "Freight Surcharge";
+			ArrayList<ESDRecordOrderPayment> orderPayments = new ArrayList<>();
+			
+			//create sales order payment record
+			ESDRecordOrderPayment orderPayment = new ESDRecordOrderPayment();
+			orderPayment.paymentMethod = ESDocumentConstants.PAYMENT_METHOD_CREDIT;
+			orderPayment.paymentProprietaryCode = "Freight Surcharge";
 			orderPayment.paymentReceipt = "3422ads2342233";
 			orderPayment.keyPaymentTypeID = "VISA-CREDIT-CARD";
-            orderPayment.paymentAmount = 11.80;
-            orderPayments.add(orderPayment);
+			orderPayment.paymentAmount = 11.80;
+			orderPayments.add(orderPayment);
 			
 			//create 2nd sales order payment record
-            orderPayment = new ESDRecordOrderPayment();
-            orderPayment.paymentMethod = ESDocumentConstants.PAYMENT_METHOD_PROPRIETARY;
-            orderPayment.paymentProprietaryCode = "PAYPAL";
+			orderPayment = new ESDRecordOrderPayment();
+			orderPayment.paymentMethod = ESDocumentConstants.PAYMENT_METHOD_PROPRIETARY;
+			orderPayment.paymentProprietaryCode = "PAYPAL";
 			orderPayment.paymentReceipt = "2323432341231";
 			orderPayment.keyPaymentTypeID = "PP";
-            orderPayment.paymentAmount = 30.00;
-            orderPayments.add(orderPayment);
+			orderPayment.paymentAmount = 30.00;
+			orderPayments.add(orderPayment);
 			
 			//add payments to the order and set overall payment details
-            salesOrderRecord.payments = orderPayments;
+			salesOrderRecord.payments = orderPayments;
 			salesOrderRecord.paymentAmount = 41.00;
 			salesOrderRecord.paymentStatus = ESDocumentConstants.PAYMENT_STATUS_PAID;
 			
@@ -589,11 +591,11 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 			salesOrderRecord.totalSurchargeTax = 8.00;
 		
 			//create sales order records list and add purchase order to it
-            ArrayList<ESDRecordOrderSale> salesOrderRecords = new ArrayList<>();
+			ArrayList<ESDRecordOrderSale> salesOrderRecords = new ArrayList<>();
 			salesOrderRecords.add(salesOrderRecord);
 		
-            //specify if the order's lines should be repriced or not, in this example either Y-Yes or N-No value comes from command line arguments
-            String repriceOrder = args[3];
+			//specify if the order's lines should be repriced or not, in this example either Y-Yes or N-No value comes from command line arguments
+			String repriceOrder = args[3];
 			
 			//after 60 seconds give up on waiting for a response from the API when creating the notification
 			int timeoutMilliseconds = 60000;
@@ -604,25 +606,25 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 			//send sales order document to the API to import against the logged in orgqanisation
 			APIv1EndpointResponseESD endpointResponseESD = APIv1EndpointOrgImportSalesOrder.call(apiOrgSession, timeoutMilliseconds, orderSaleESD, repriceOrder.equalsIgnoreCase(ESDocumentConstants.ESD_VALUE_YES));
 			ESDocumentOrderSale esDocumentOrderSaleReturned = (ESDocumentOrderSale)endpointResponseESD.esDocument;
-            
-            //check the result of importing the sales orders
-            if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
-                System.out.println("SUCCESS - organisation sales orders have successfully been imported.");
-                
-                //iterate through each of the returned sales orders and output the details of the sales orders
-                if(esDocumentOrderSaleReturned.dataRecords != null){
-                    for (ESDRecordOrderSale salesOrderRecordFinal : esDocumentOrderSaleReturned.dataRecords){
-                        System.out.println("\nSales Order Returned, Order Details: ");
-                        System.out.println("Sales Order Code: " + salesOrderRecordFinal.salesOrderCode);
-                        System.out.println("Sales Order Total Cost: " + salesOrderRecordFinal.totalPriceIncTax + " (" + salesOrderRecordFinal.currencyISOCode + ")");
-                        System.out.println("Sales Order Total Taxes: " + salesOrderRecordFinal.totalTax + " (" + salesOrderRecordFinal.currencyISOCode + ")");
-                        System.out.println("Sales Order Customer Account: " + salesOrderRecordFinal.customerAccountCode);
-                        System.out.println("Sales Order Total Lines: " + salesOrderRecordFinal.totalLines);
-                    }
-                }
-            }else{
-                System.out.println("FAIL - organisation sales order(s) failed to be processed. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
-                
+			
+			//check the result of importing the sales orders
+			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
+				System.out.println("SUCCESS - organisation sales orders have successfully been imported.");
+				
+				//iterate through each of the returned sales orders and output the details of the sales orders
+				if(esDocumentOrderSaleReturned.dataRecords != null){
+					for (ESDRecordOrderSale salesOrderRecordFinal : esDocumentOrderSaleReturned.dataRecords){
+						System.out.println("\nSales Order Returned, Order Details: ");
+						System.out.println("Sales Order Code: " + salesOrderRecordFinal.salesOrderCode);
+						System.out.println("Sales Order Total Cost: " + salesOrderRecordFinal.totalPriceIncTax + " (" + salesOrderRecordFinal.currencyISOCode + ")");
+						System.out.println("Sales Order Total Taxes: " + salesOrderRecordFinal.totalTax + " (" + salesOrderRecordFinal.currencyISOCode + ")");
+						System.out.println("Sales Order Customer Account: " + salesOrderRecordFinal.customerAccountCode);
+						System.out.println("Sales Order Total Lines: " + salesOrderRecordFinal.totalLines);
+					}
+				}
+			}else{
+				System.out.println("FAIL - organisation sales order(s) failed to be processed. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+				
 				//check if the server response returned back a Ecommerce Standards Document
 				if(esDocumentOrderSaleReturned != null)
 				{
@@ -723,14 +725,14 @@ public class APIv1ExampleRunnerImportOrgESDDataOrderSales
 							break;
 					}
 				}
-            }
+			}
 		}
 		
 		//next steps
 		//call other API endpoints...
 		//destroy API session when done...
 		apiOrgSession.destroyOrgSession();
-    }
+	}
 }
 ```
 
@@ -1009,38 +1011,38 @@ import org.esd.EcommerceStandardsDocuments.*;
 
 public class APIv1ExampleRunnerSearchCustomerAccountRecords 
 {
-    public static void main(String[] args)
-    {
-        //check that the required arguments have been given
-        if(args.length < 4){
-            System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [supplierOrgID] [customerAccountCode] [recordType]");
-            return;
-        }
-        
+	public static void main(String[] args)
+	{
+		//check that the required arguments have been given
+		if(args.length < 4){
+			System.out.println("Set the following arguments: [orgID] [orgAPIKey] [orgAPIPass] [supplierOrgID] [customerAccountCode] [recordType]");
+			return;
+		}
+	
 		//obtain or load in an organisation's API credentials, in this example from command line arguments
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
-        
-        //specify the supplier organisation to get data from based on its ID within the platform, in this example the ID comes from command line arguments
-        String supplierOrgID = args[3];
-            
-        //optionally get the customer account code if required based on the type of data being retrieved, in this example the account code comes from command line arguments
-        String customerAccountCode = args[4];
-        String recordType = args[5].toUpperCase();
-        
-        long beginDateTime = 0;
-        long endDateTime = System.currentTimeMillis();
-        int pageNumber = 1;
-        int recordsMaxAmount = 100;
-        boolean outstandingRecordsOnly = false;
-        String searchString="";
-        String keyRecordIDs="";
-        String searchType="";
-        
-        //set date time objects that can be used to convert long date times to calendar dates
-        int sessionTimeoutMilliseconds = 20000;
-        Calendar calendar = Calendar.getInstance();
+		
+		//specify the supplier organisation to get data from based on its ID within the platform, in this example the ID comes from command line arguments
+		String supplierOrgID = args[3];
+			
+		//optionally get the customer account code if required based on the type of data being retrieved, in this example the account code comes from command line arguments
+		String customerAccountCode = args[4];
+		String recordType = args[5].toUpperCase();
+		
+		long beginDateTime = 0;
+		long endDateTime = System.currentTimeMillis();
+		int pageNumber = 1;
+		int recordsMaxAmount = 100;
+		boolean outstandingRecordsOnly = false;
+		String searchString="";
+		String keyRecordIDs="";
+		String searchType="";
+		
+		//set date time objects that can be used to convert long date times to calendar dates
+		int sessionTimeoutMilliseconds = 20000;
+		Calendar calendar = Calendar.getInstance();
 		
 		//create an API session instance
 		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
@@ -1068,214 +1070,214 @@ public class APIv1ExampleRunnerSearchCustomerAccountRecords
 			
 			//call the platform's API to search for the customer account account records
 			APIv1EndpointResponseESD endpointResponseESD = 
-                APIv1EndpointOrgSearchCustomerAccountRecords.call(
-                    apiOrgSession, 
-                    timeoutMilliseconds, 
-                    recordType,
-                    supplierOrgID, 
-                    customerAccountCode,
-                    beginDateTime,
-                    endDateTime,
-                    pageNumber,
-                    recordsMaxAmount,
-                    outstandingRecordsOnly,
-                    searchString,
-                    keyRecordIDs,
-                    searchType
-                );
-            ESDocumentCustomerAccountEnquiry esDocumentCustomerAccountEnquiry = (ESDocumentCustomerAccountEnquiry)endpointResponseESD.esDocument;
+				APIv1EndpointOrgSearchCustomerAccountRecords.call(
+					apiOrgSession, 
+					timeoutMilliseconds, 
+					recordType,
+					supplierOrgID, 
+					customerAccountCode,
+					beginDateTime,
+					endDateTime,
+					pageNumber,
+					recordsMaxAmount,
+					outstandingRecordsOnly,
+					searchString,
+					keyRecordIDs,
+					searchType
+				);
+			ESDocumentCustomerAccountEnquiry esDocumentCustomerAccountEnquiry = (ESDocumentCustomerAccountEnquiry)endpointResponseESD.esDocument;
 			
 			//check that the data successfully imported
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
-                //output records based on the record type
-                switch(recordType)
-                {
-                    case ESDocumentConstants.RECORD_TYPE_INVOICE:
-                        System.out.println("SUCCESS - account invoice record data successfully obtained from the platform");
-                        System.out.println("\nInvoice Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+				//output records based on the record type
+				switch(recordType)
+				{
+					case ESDocumentConstants.RECORD_TYPE_INVOICE:
+						System.out.println("SUCCESS - account invoice record data successfully obtained from the platform");
+						System.out.println("\nInvoice Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that invoice records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.invoiceRecords != null){
-                            System.out.println("Invoice Records:");
+						//check that invoice records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.invoiceRecords != null){
+							System.out.println("Invoice Records:");
 
-                            //iterate through each invoice record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryInvoice invoiceRecord: esDocumentCustomerAccountEnquiry.invoiceRecords)
-                            {    
-                                //convert invoice date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(invoiceRecord.invoiceDate);
+							//iterate through each invoice record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryInvoice invoiceRecord: esDocumentCustomerAccountEnquiry.invoiceRecords)
+							{    
+								//convert invoice date time milliseconds into calendar representation
+								calendar.setTimeInMillis(invoiceRecord.invoiceDate);
 
-                                //output details of the invoice record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("     Invoice Record #: " + i);
-                                System.out.println("       Key Invoice ID: " + invoiceRecord.keyInvoiceID);
-                                System.out.println("           Invoice ID: " + invoiceRecord.invoiceID);
-                                System.out.println("       Invoice Number: " + invoiceRecord.invoiceNumber);
-                                System.out.println("         Invoice Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("Total Price (Inc Tax): " + invoiceRecord.totalIncTax + " " + invoiceRecord.currencyCode);
-                                System.out.println("           Total Paid: " + invoiceRecord.totalPaid + " " + invoiceRecord.currencyCode);
-                                System.out.println("           Total Owed: " + invoiceRecord.balance + " " + invoiceRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                i++;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_ORDER_SALE:
-                        System.out.println("SUCCESS - account sales order record data successfully obtained from the platform");
-                        System.out.println("Sales Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+								//output details of the invoice record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("     Invoice Record #: " + i);
+								System.out.println("       Key Invoice ID: " + invoiceRecord.keyInvoiceID);
+								System.out.println("           Invoice ID: " + invoiceRecord.invoiceID);
+								System.out.println("       Invoice Number: " + invoiceRecord.invoiceNumber);
+								System.out.println("         Invoice Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("Total Price (Inc Tax): " + invoiceRecord.totalIncTax + " " + invoiceRecord.currencyCode);
+								System.out.println("           Total Paid: " + invoiceRecord.totalPaid + " " + invoiceRecord.currencyCode);
+								System.out.println("           Total Owed: " + invoiceRecord.balance + " " + invoiceRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								i++;
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_ORDER_SALE:
+						System.out.println("SUCCESS - account sales order record data successfully obtained from the platform");
+						System.out.println("Sales Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that sales order records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.orderSaleRecords != null){
-                            System.out.println("Sales Order Records:");
+						//check that sales order records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.orderSaleRecords != null){
+							System.out.println("Sales Order Records:");
 
-                            //iterate through each sales order record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryOrderSale orderSaleRecord: esDocumentCustomerAccountEnquiry.orderSaleRecords)
-                            {    
-                                //convert sales order date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(orderSaleRecord.orderDate);
+							//iterate through each sales order record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryOrderSale orderSaleRecord: esDocumentCustomerAccountEnquiry.orderSaleRecords)
+							{    
+								//convert sales order date time milliseconds into calendar representation
+								calendar.setTimeInMillis(orderSaleRecord.orderDate);
 
-                                //output details of the sales order record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println(" Sales Order Record #: " + i);
-                                System.out.println("    Key Order Sale ID: " + orderSaleRecord.keyOrderSaleID);
-                                System.out.println("             Order ID: " + orderSaleRecord.orderID);
-                                System.out.println("         Order Number: " + orderSaleRecord.orderNumber);
-                                System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("Total Price (Inc Tax): " + orderSaleRecord.totalIncTax + " " + orderSaleRecord.currencyCode);
-                                System.out.println("           Total Paid: " + orderSaleRecord.totalPaid + " " + orderSaleRecord.currencyCode);
-                                System.out.println("           Total Owed: " + orderSaleRecord.balance + " " + orderSaleRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                i++;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_BACKORDER:
-                        System.out.println("SUCCESS - account back order record data successfully obtained from the platform");
-                        System.out.println("Back Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+								//output details of the sales order record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println(" Sales Order Record #: " + i);
+								System.out.println("    Key Order Sale ID: " + orderSaleRecord.keyOrderSaleID);
+								System.out.println("             Order ID: " + orderSaleRecord.orderID);
+								System.out.println("         Order Number: " + orderSaleRecord.orderNumber);
+								System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("Total Price (Inc Tax): " + orderSaleRecord.totalIncTax + " " + orderSaleRecord.currencyCode);
+								System.out.println("           Total Paid: " + orderSaleRecord.totalPaid + " " + orderSaleRecord.currencyCode);
+								System.out.println("           Total Owed: " + orderSaleRecord.balance + " " + orderSaleRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								i++;
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_BACKORDER:
+						System.out.println("SUCCESS - account back order record data successfully obtained from the platform");
+						System.out.println("Back Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that back order records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.backOrderRecords != null){
-                            System.out.println("Back Order Records:");
+						//check that back order records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.backOrderRecords != null){
+							System.out.println("Back Order Records:");
 
-                            //iterate through each back order record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryBackOrder backOrderRecord: esDocumentCustomerAccountEnquiry.backOrderRecords)
-                            {    
-                                //convert back order date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(backOrderRecord.backOrderDate);
+							//iterate through each back order record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryBackOrder backOrderRecord: esDocumentCustomerAccountEnquiry.backOrderRecords)
+							{    
+								//convert back order date time milliseconds into calendar representation
+								calendar.setTimeInMillis(backOrderRecord.backOrderDate);
 
-                                //output details of the back order record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("  Back Order Record #: " + i);
-                                System.out.println("    Key Back Order ID: " + backOrderRecord.keyBackOrderID);
-                                System.out.println("             Order ID: " + backOrderRecord.backOrderID);
-                                System.out.println("    Back Order Number: " + backOrderRecord.backOrderNumber);
-                                System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("Total Price (Inc Tax): " + backOrderRecord.totalIncTax + " " + backOrderRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                i++;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_TRANSACTION:
-                        System.out.println("SUCCESS - account transaction record data successfully obtained from the platform");
-                        System.out.println("Transaction Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+								//output details of the back order record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("  Back Order Record #: " + i);
+								System.out.println("    Key Back Order ID: " + backOrderRecord.keyBackOrderID);
+								System.out.println("             Order ID: " + backOrderRecord.backOrderID);
+								System.out.println("    Back Order Number: " + backOrderRecord.backOrderNumber);
+								System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("Total Price (Inc Tax): " + backOrderRecord.totalIncTax + " " + backOrderRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								i++;
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_TRANSACTION:
+						System.out.println("SUCCESS - account transaction record data successfully obtained from the platform");
+						System.out.println("Transaction Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that transaction records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.transactionRecords != null){
-                            System.out.println("Transaction Records:");
+						//check that transaction records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.transactionRecords != null){
+							System.out.println("Transaction Records:");
 
-                            //iterate through each transaction record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryTransaction transactionRecord: esDocumentCustomerAccountEnquiry.transactionRecords)
-                            {    
-                                //convert transaction date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(transactionRecord.transactionDate);
+							//iterate through each transaction record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryTransaction transactionRecord: esDocumentCustomerAccountEnquiry.transactionRecords)
+							{    
+								//convert transaction date time milliseconds into calendar representation
+								calendar.setTimeInMillis(transactionRecord.transactionDate);
 
-                                //output details of the transaction record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println(" Transaction Record #: " + i);
-                                System.out.println("   Key Transaction ID: " + transactionRecord.keyTransactionID);
-                                System.out.println("       Transaction ID: " + transactionRecord.transactionID);
-                                System.out.println("   Transaction Number: " + transactionRecord.transactionNumber);
-                                System.out.println("     Transaction Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                if(transactionRecord.debitAmount > 0){
-                                    System.out.println("       Amount Debited: " + transactionRecord.debitAmount + " " + transactionRecord.currencyCode);
-                                }else if(transactionRecord.creditAmount > 0){
-                                    System.out.println("      Amount Credited: " + transactionRecord.creditAmount + " " + transactionRecord.currencyCode);
-                                }
-                                System.out.println("              Balance: " + transactionRecord.balance + " " + transactionRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                i++;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_CREDIT:
-                        System.out.println("SUCCESS - account credit record data successfully obtained from the platform");
-                        System.out.println("Credit Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+								//output details of the transaction record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println(" Transaction Record #: " + i);
+								System.out.println("   Key Transaction ID: " + transactionRecord.keyTransactionID);
+								System.out.println("       Transaction ID: " + transactionRecord.transactionID);
+								System.out.println("   Transaction Number: " + transactionRecord.transactionNumber);
+								System.out.println("     Transaction Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								if(transactionRecord.debitAmount > 0){
+									System.out.println("       Amount Debited: " + transactionRecord.debitAmount + " " + transactionRecord.currencyCode);
+								}else if(transactionRecord.creditAmount > 0){
+									System.out.println("      Amount Credited: " + transactionRecord.creditAmount + " " + transactionRecord.currencyCode);
+								}
+								System.out.println("              Balance: " + transactionRecord.balance + " " + transactionRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								i++;
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_CREDIT:
+						System.out.println("SUCCESS - account credit record data successfully obtained from the platform");
+						System.out.println("Credit Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that credit records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.creditRecords != null){
-                            System.out.println("Credit Records:");
+						//check that credit records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.creditRecords != null){
+							System.out.println("Credit Records:");
 
-                            //iterate through each credit record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryCredit creditRecord: esDocumentCustomerAccountEnquiry.creditRecords)
-                            {    
-                                //convert credit date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(creditRecord.creditDate);
+							//iterate through each credit record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryCredit creditRecord: esDocumentCustomerAccountEnquiry.creditRecords)
+							{    
+								//convert credit date time milliseconds into calendar representation
+								calendar.setTimeInMillis(creditRecord.creditDate);
 
-                                //output details of the credit record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("      Credit Record #: " + i);
-                                System.out.println("        Key Credit ID: " + creditRecord.keyCreditID);
-                                System.out.println("            Credit ID: " + creditRecord.creditID);
-                                System.out.println("        Credit Number: " + creditRecord.creditNumber);
-                                System.out.println("          Credit Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("      Amount Credited: " + creditRecord.appliedAmount + " " + creditRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                i++;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_PAYMENT:
-                        System.out.println("SUCCESS - account payment record data successfully obtained from the platform");
-                        System.out.println("Payment Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+								//output details of the credit record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("      Credit Record #: " + i);
+								System.out.println("        Key Credit ID: " + creditRecord.keyCreditID);
+								System.out.println("            Credit ID: " + creditRecord.creditID);
+								System.out.println("        Credit Number: " + creditRecord.creditNumber);
+								System.out.println("          Credit Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("      Amount Credited: " + creditRecord.appliedAmount + " " + creditRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								i++;
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_PAYMENT:
+						System.out.println("SUCCESS - account payment record data successfully obtained from the platform");
+						System.out.println("Payment Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that payment records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.paymentRecords != null){
-                            System.out.println("Payment Records:");
+						//check that payment records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.paymentRecords != null){
+							System.out.println("Payment Records:");
 
-                            //iterate through each payment record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryPayment paymentRecord: esDocumentCustomerAccountEnquiry.paymentRecords)
-                            {    
-                                //convert payment date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(paymentRecord.paymentDate);
+							//iterate through each payment record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryPayment paymentRecord: esDocumentCustomerAccountEnquiry.paymentRecords)
+							{    
+								//convert payment date time milliseconds into calendar representation
+								calendar.setTimeInMillis(paymentRecord.paymentDate);
 
-                                //output details of the payment record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("     Payment Record #: " + i);
-                                System.out.println("       Key Payment ID: " + paymentRecord.keyPaymentID);
-                                System.out.println("           Payment ID: " + paymentRecord.paymentID);
-                                System.out.println("       Payment Number: " + paymentRecord.paymentNumber);
-                                System.out.println("         Payment Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("    Total Amount Paid: " + paymentRecord.totalAmount + " " + paymentRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                i++;
-                            }
-                        }
-                        break;
-                }
-            }else{
-                System.out.println("FAIL - account record data failed to be obtained from the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
-            }
-            
-            //next steps
-            //call other API endpoints...
-            //destroy API session when done...
-            apiOrgSession.destroyOrgSession();
+								//output details of the payment record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("     Payment Record #: " + i);
+								System.out.println("       Key Payment ID: " + paymentRecord.keyPaymentID);
+								System.out.println("           Payment ID: " + paymentRecord.paymentID);
+								System.out.println("       Payment Number: " + paymentRecord.paymentNumber);
+								System.out.println("         Payment Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("    Total Amount Paid: " + paymentRecord.totalAmount + " " + paymentRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								i++;
+							}
+						}
+						break;
+				}
+			}else{
+				System.out.println("FAIL - account record data failed to be obtained from the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+			}
+			
+			//next steps
+			//call other API endpoints...
+			//destroy API session when done...
+			apiOrgSession.destroyOrgSession();
 		}
     }
 }
@@ -1361,44 +1363,44 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 			
 			//call the platform's API to retrieve the details of the customer account record
 			APIv1EndpointResponseESD endpointResponseESD = 
-                APIv1EndpointOrgRetrieveCustomerAccountRecord.call(
-                    apiOrgSession, 
-                    timeoutMilliseconds, 
-                    recordType,
-                    supplierOrgID, 
-                    customerAccountCode,
-                    keyRecordID
-                );
-            ESDocumentCustomerAccountEnquiry esDocumentCustomerAccountEnquiry = (ESDocumentCustomerAccountEnquiry)endpointResponseESD.esDocument;
+				APIv1EndpointOrgRetrieveCustomerAccountRecord.call(
+					apiOrgSession, 
+					timeoutMilliseconds, 
+					recordType,
+					supplierOrgID, 
+					customerAccountCode,
+					keyRecordID
+				);
+			ESDocumentCustomerAccountEnquiry esDocumentCustomerAccountEnquiry = (ESDocumentCustomerAccountEnquiry)endpointResponseESD.esDocument;
 			
 			//check that the data successfully imported
 			if(endpointResponseESD.result.equals(APIv1EndpointResponse.ENDPOINT_RESULT_SUCCESS)){
-                //output records based on the record type
-                switch(recordType)
-                {
-                    case ESDocumentConstants.RECORD_TYPE_INVOICE:
-                        System.out.println("SUCCESS - account invoice record data successfully obtained from the platform");
-                        System.out.println("\nInvoice Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+				//output records based on the record type
+				switch(recordType)
+				{
+					case ESDocumentConstants.RECORD_TYPE_INVOICE:
+						System.out.println("SUCCESS - account invoice record data successfully obtained from the platform");
+						System.out.println("\nInvoice Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that invoice record has been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.invoiceRecords != null){
-                            System.out.println("Invoice Records:");
+						//check that invoice record has been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.invoiceRecords != null){
+							System.out.println("Invoice Records:");
 
-                            //display the details of the record stored within the standards document
-                            for(ESDRecordCustomerAccountEnquiryInvoice invoiceRecord: esDocumentCustomerAccountEnquiry.invoiceRecords)
-                            {
-                                //convert invoice date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(invoiceRecord.invoiceDate);
+							//display the details of the record stored within the standards document
+							for(ESDRecordCustomerAccountEnquiryInvoice invoiceRecord: esDocumentCustomerAccountEnquiry.invoiceRecords)
+							{
+								//convert invoice date time milliseconds into calendar representation
+								calendar.setTimeInMillis(invoiceRecord.invoiceDate);
 
-                                //output details of the invoice record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("       Key Invoice ID: " + invoiceRecord.keyInvoiceID);
-                                System.out.println("           Invoice ID: " + invoiceRecord.invoiceID);
-                                System.out.println("       Invoice Number: " + invoiceRecord.invoiceNumber);
-                                System.out.println("         Invoice Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("Total Price (Inc Tax): " + invoiceRecord.totalIncTax + " " + invoiceRecord.currencyCode);
-                                System.out.println("           Total Paid: " + invoiceRecord.totalPaid + " " + invoiceRecord.currencyCode);
-                                System.out.println("           Total Owed: " + invoiceRecord.balance + " " + invoiceRecord.currencyCode);
+								//output details of the invoice record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("       Key Invoice ID: " + invoiceRecord.keyInvoiceID);
+								System.out.println("           Invoice ID: " + invoiceRecord.invoiceID);
+								System.out.println("       Invoice Number: " + invoiceRecord.invoiceNumber);
+								System.out.println("         Invoice Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("Total Price (Inc Tax): " + invoiceRecord.totalIncTax + " " + invoiceRecord.currencyCode);
+								System.out.println("           Total Paid: " + invoiceRecord.totalPaid + " " + invoiceRecord.currencyCode);
+								System.out.println("           Total Owed: " + invoiceRecord.balance + " " + invoiceRecord.currencyCode);
 								System.out.println("          Description: " + invoiceRecord.description);
 								System.out.println("              Comment: " + invoiceRecord.comment);
 								System.out.println("     Reference Number: " + invoiceRecord.referenceNumber);
@@ -1428,7 +1430,7 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 								System.out.println("     Consignment Code: " + invoiceRecord.freightCarrierConsignCode);
 								System.out.println("        Tracking Code: " + invoiceRecord.freightCarrierTrackingCode);
 								System.out.println("         Carrier Name: " + invoiceRecord.freightCarrierName);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
 								
 								//output the details of each line
 								if(invoiceRecord.lines != null)
@@ -1463,32 +1465,32 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 								}
 								
 								break;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_ORDER_SALE:
-                        System.out.println("SUCCESS - account sales order record data successfully obtained from the platform");
-                        System.out.println("Sales Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_ORDER_SALE:
+						System.out.println("SUCCESS - account sales order record data successfully obtained from the platform");
+						System.out.println("Sales Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that sales order records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.orderSaleRecords != null){
-                            System.out.println("Sales Order Records:");
+						//check that sales order records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.orderSaleRecords != null){
+							System.out.println("Sales Order Records:");
 
-                            //display the details of the record stored within the standards document
-                            for(ESDRecordCustomerAccountEnquiryOrderSale salesOrderRecord: esDocumentCustomerAccountEnquiry.orderSaleRecords)
-                            {
-                                //convert order date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(salesOrderRecord.orderDate);
+							//display the details of the record stored within the standards document
+							for(ESDRecordCustomerAccountEnquiryOrderSale salesOrderRecord: esDocumentCustomerAccountEnquiry.orderSaleRecords)
+							{
+								//convert order date time milliseconds into calendar representation
+								calendar.setTimeInMillis(salesOrderRecord.orderDate);
 
-                                //output details of the sales order record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("    Key Order Sale ID: " + salesOrderRecord.keyOrderSaleID);
-                                System.out.println("             Order ID: " + salesOrderRecord.orderID);
-                                System.out.println("         Order Number: " + salesOrderRecord.orderNumber);
-                                System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("Total Price (Inc Tax): " + salesOrderRecord.totalIncTax + " " + salesOrderRecord.currencyCode);
-                                System.out.println("           Total Paid: " + salesOrderRecord.totalPaid + " " + salesOrderRecord.currencyCode);
-                                System.out.println("           Total Owed: " + salesOrderRecord.balance + " " + salesOrderRecord.currencyCode);
+								//output details of the sales order record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("    Key Order Sale ID: " + salesOrderRecord.keyOrderSaleID);
+								System.out.println("             Order ID: " + salesOrderRecord.orderID);
+								System.out.println("         Order Number: " + salesOrderRecord.orderNumber);
+								System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("Total Price (Inc Tax): " + salesOrderRecord.totalIncTax + " " + salesOrderRecord.currencyCode);
+								System.out.println("           Total Paid: " + salesOrderRecord.totalPaid + " " + salesOrderRecord.currencyCode);
+								System.out.println("           Total Owed: " + salesOrderRecord.balance + " " + salesOrderRecord.currencyCode);
 								System.out.println("          Description: " + salesOrderRecord.description);
 								System.out.println("              Comment: " + salesOrderRecord.comment);
 								System.out.println("     Reference Number: " + salesOrderRecord.referenceNumber);
@@ -1553,33 +1555,33 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 								}
 								
 								break;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_BACKORDER:
-                        System.out.println("SUCCESS - account back order record data successfully obtained from the platform");
-                        System.out.println("Back Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_BACKORDER:
+						System.out.println("SUCCESS - account back order record data successfully obtained from the platform");
+						System.out.println("Back Order Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that back order records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.backOrderRecords != null){
-                            System.out.println("Back Order Records:");
+						//check that back order records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.backOrderRecords != null){
+							System.out.println("Back Order Records:");
 
-                            //display the details of the record stored within the standards document
-                            for(ESDRecordCustomerAccountEnquiryBackOrder backOrderRecord: esDocumentCustomerAccountEnquiry.backOrderRecords)
-                            {
-                                //convert order date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(backOrderRecord.backOrderDate);
+							//display the details of the record stored within the standards document
+							for(ESDRecordCustomerAccountEnquiryBackOrder backOrderRecord: esDocumentCustomerAccountEnquiry.backOrderRecords)
+							{
+								//convert order date time milliseconds into calendar representation
+								calendar.setTimeInMillis(backOrderRecord.backOrderDate);
 
-                                //output details of the back order record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("    Key Back Order ID: " + backOrderRecord.keyBackOrderID);
-                                System.out.println("        Back Order ID: " + backOrderRecord.backOrderID);
-                                System.out.println("    Back Order Number: " + backOrderRecord.backOrderNumber);
-                                System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("Total Price (Inc Tax): " + backOrderRecord.totalIncTax + " " + backOrderRecord.currencyCode);
-                                System.out.println("           Total Paid: " + backOrderRecord.totalPaid + " " + backOrderRecord.currencyCode);
-                                System.out.println("           Total Owed: " + backOrderRecord.balance + " " + backOrderRecord.currencyCode);
-								System.out.println("          Description: " + backOrderRecord.description);
+								//output details of the back order record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("    Key Back Order ID: " + backOrderRecord.keyBackOrderID);
+								System.out.println("        Back Order ID: " + backOrderRecord.backOrderID);
+								System.out.println("    Back Order Number: " + backOrderRecord.backOrderNumber);
+								System.out.println("           Order Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("Total Price (Inc Tax): " + backOrderRecord.totalIncTax + " " + backOrderRecord.currencyCode);
+								System.out.println("           Total Paid: " + backOrderRecord.totalPaid + " " + backOrderRecord.currencyCode);
+								System.out.println("           Total Owed: " + backOrderRecord.balance + " " + backOrderRecord.currencyCode);
+							System.out.println("          Description: " + backOrderRecord.description);
 								System.out.println("              Comment: " + backOrderRecord.comment);
 								System.out.println("     Reference Number: " + backOrderRecord.referenceNumber);
 								System.out.println("       Reference Type: " + backOrderRecord.referenceType);
@@ -1638,63 +1640,63 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 								}
 								
 								break;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_TRANSACTION:
-                        System.out.println("SUCCESS - account transaction record data successfully obtained from the platform");
-                        System.out.println("Transaction Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_TRANSACTION:
+						System.out.println("SUCCESS - account transaction record data successfully obtained from the platform");
+						System.out.println("Transaction Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that transaction records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.transactionRecords != null){
-                            System.out.println("Transaction Records:");
+						//check that transaction records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.transactionRecords != null){
+							System.out.println("Transaction Records:");
 
-                            //iterate through each transaction record stored within the standards document
-                            int i=0;
-                            for(ESDRecordCustomerAccountEnquiryTransaction transactionRecord: esDocumentCustomerAccountEnquiry.transactionRecords)
-                            {    
-                                //convert transaction date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(transactionRecord.transactionDate);
+							//iterate through each transaction record stored within the standards document
+							int i=0;
+							for(ESDRecordCustomerAccountEnquiryTransaction transactionRecord: esDocumentCustomerAccountEnquiry.transactionRecords)
+							{    
+								//convert transaction date time milliseconds into calendar representation
+								calendar.setTimeInMillis(transactionRecord.transactionDate);
 
-                                //output details of the transaction record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println(" Transaction Record #: " + i);
-                                System.out.println("   Key Transaction ID: " + transactionRecord.keyTransactionID);
-                                System.out.println("       Transaction ID: " + transactionRecord.transactionID);
-                                System.out.println("   Transaction Number: " + transactionRecord.transactionNumber);
-                                System.out.println("     Transaction Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                if(transactionRecord.debitAmount > 0){
-                                    System.out.println("       Amount Debited: " + transactionRecord.debitAmount + " " + transactionRecord.currencyCode);
-                                }else if(transactionRecord.creditAmount > 0){
-                                    System.out.println("      Amount Credited: " + transactionRecord.creditAmount + " " + transactionRecord.currencyCode);
-                                }
-                                System.out.println("              Balance: " + transactionRecord.balance + " " + transactionRecord.currencyCode);
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                break;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_CREDIT:
-                        System.out.println("SUCCESS - account credit record data successfully obtained from the platform");
-                        System.out.println("Credit Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+								//output details of the transaction record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println(" Transaction Record #: " + i);
+								System.out.println("   Key Transaction ID: " + transactionRecord.keyTransactionID);
+								System.out.println("       Transaction ID: " + transactionRecord.transactionID);
+								System.out.println("   Transaction Number: " + transactionRecord.transactionNumber);
+								System.out.println("     Transaction Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								if(transactionRecord.debitAmount > 0){
+									System.out.println("       Amount Debited: " + transactionRecord.debitAmount + " " + transactionRecord.currencyCode);
+								}else if(transactionRecord.creditAmount > 0){
+									System.out.println("      Amount Credited: " + transactionRecord.creditAmount + " " + transactionRecord.currencyCode);
+								}
+								System.out.println("              Balance: " + transactionRecord.balance + " " + transactionRecord.currencyCode);
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								break;
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_CREDIT:
+						System.out.println("SUCCESS - account credit record data successfully obtained from the platform");
+						System.out.println("Credit Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that credit records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.creditRecords != null){
-                            System.out.println("Credit Records:");
+						//check that credit records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.creditRecords != null){
+							System.out.println("Credit Records:");
 
-                            //display the details of the record stored within the standards document
-                            for(ESDRecordCustomerAccountEnquiryCredit creditRecord: esDocumentCustomerAccountEnquiry.creditRecords)
-                            {
-                                //convert credit date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(creditRecord.creditDate);
+							//display the details of the record stored within the standards document
+							for(ESDRecordCustomerAccountEnquiryCredit creditRecord: esDocumentCustomerAccountEnquiry.creditRecords)
+							{
+								//convert credit date time milliseconds into calendar representation
+								calendar.setTimeInMillis(creditRecord.creditDate);
 
-                                //output details of the credit record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("        Key Credit ID: " + creditRecord.keyCreditID);
-                                System.out.println("            Credit ID: " + creditRecord.creditID);
-                                System.out.println("        Credit Number: " + creditRecord.creditNumber);
-                                System.out.println("          Credit Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("      Amount Credited: " + creditRecord.appliedAmount + " " + creditRecord.currencyCode);
+								//output details of the credit record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("        Key Credit ID: " + creditRecord.keyCreditID);
+								System.out.println("            Credit ID: " + creditRecord.creditID);
+								System.out.println("        Credit Number: " + creditRecord.creditNumber);
+								System.out.println("          Credit Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("      Amount Credited: " + creditRecord.appliedAmount + " " + creditRecord.currencyCode);
 								System.out.println("          Description: " + creditRecord.description);
 								System.out.println("              Comment: " + creditRecord.comment);
 								System.out.println("     Reference Number: " + creditRecord.referenceNumber);
@@ -1751,30 +1753,30 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 								}
 								
 								break;
-                            }
-                        }
-                        break;
-                    case ESDocumentConstants.RECORD_TYPE_PAYMENT:
-                        System.out.println("SUCCESS - account payment record data successfully obtained from the platform");
-                        System.out.println("Payment Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
+							}
+						}
+						break;
+					case ESDocumentConstants.RECORD_TYPE_PAYMENT:
+						System.out.println("SUCCESS - account payment record data successfully obtained from the platform");
+						System.out.println("Payment Records Returned: " + esDocumentCustomerAccountEnquiry.totalDataRecords);
 
-                        //check that payment records have been placed into the standards document
-                        if(esDocumentCustomerAccountEnquiry.paymentRecords != null){
-                            System.out.println("Payment Records:");
+						//check that payment records have been placed into the standards document
+						if(esDocumentCustomerAccountEnquiry.paymentRecords != null){
+							System.out.println("Payment Records:");
 
-                            //display the details of the record stored within the standards document
-                            for(ESDRecordCustomerAccountEnquiryPayment paymentRecord: esDocumentCustomerAccountEnquiry.paymentRecords)
-                            {
-                                //convert payment date time milliseconds into calendar representation
-                                calendar.setTimeInMillis(paymentRecord.paymentDate);
+							//display the details of the record stored within the standards document
+							for(ESDRecordCustomerAccountEnquiryPayment paymentRecord: esDocumentCustomerAccountEnquiry.paymentRecords)
+							{
+								//convert payment date time milliseconds into calendar representation
+								calendar.setTimeInMillis(paymentRecord.paymentDate);
 
-                                //output details of the payment record
-                                System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
-                                System.out.println("       Key Payment ID: " + paymentRecord.keyPaymentID);
-                                System.out.println("           Payment ID: " + paymentRecord.paymentID);
-                                System.out.println("       Payment Number: " + paymentRecord.paymentNumber);
-                                System.out.println("         Payment Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
-                                System.out.println("    Total Amount Paid: " + paymentRecord.totalAmount + " " + paymentRecord.currencyCode);
+								//output details of the payment record
+								System.out.println(APIv1OrgTestRunner.CONSOLE_LINE);
+								System.out.println("       Key Payment ID: " + paymentRecord.keyPaymentID);
+								System.out.println("           Payment ID: " + paymentRecord.paymentID);
+								System.out.println("       Payment Number: " + paymentRecord.paymentNumber);
+								System.out.println("         Payment Date: " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()));
+								System.out.println("    Total Amount Paid: " + paymentRecord.totalAmount + " " + paymentRecord.currencyCode);
 								System.out.println("          Description: " + paymentRecord.description);
 								System.out.println("              Comment: " + paymentRecord.comment);
 								System.out.println("     Reference Number: " + paymentRecord.referenceNumber);
@@ -1812,20 +1814,20 @@ public class APIv1ExampleRunnerRetrieveCustomerAccountRecord
 								}
 								
 								break;
-                            }
-                        }
-                        break;
-                }
-            }else{
-                System.out.println("FAIL - account record data failed to be obtained from the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
-            }
-            
-            //next steps
-            //call other API endpoints...
-            //destroy API session when done...
-            apiOrgSession.destroyOrgSession();
+							}
+						}
+						break;
+				}
+			}else{
+				System.out.println("FAIL - account record data failed to be obtained from the platform. Reason: " + endpointResponseESD.result_message  + " Error Code: " + endpointResponseESD.result_code);
+			}
+			
+			//next steps
+			//call other API endpoints...
+			//destroy API session when done...
+			apiOrgSession.destroyOrgSession();
 		}
-    }
+	}
 }
 
 ```
@@ -1866,7 +1868,7 @@ public class ExampleRunner
 		String orgID = args[0];
 		String orgAPIKey = args[1];
 		String orgAPIPass = args[2];
-        int sessionTimeoutMilliseconds = 20000;
+		int sessionTimeoutMilliseconds = 20000;
 		
 		//create an API session instance
 		APIv1OrgSession apiOrgSession = new APIv1OrgSession(orgID, orgAPIKey, orgAPIPass, sessionTimeoutMilliseconds, APIv1Constants.SUPPORTED_LOCALES_EN_AU);
@@ -1945,20 +1947,20 @@ public class ExampleRunner
 			orderLines.add(orderProduct);
 			
 			//add a 2nd purchase order line record that is a text line
-            orderProduct = new ESDRecordOrderPurchaseLine();
-            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_TEXT;
-            orderProduct.productCode = "TEA-TOWEL-BLUE";
-            orderProduct.textDescription = "Please bundle tea towels into a box";
-            orderLines.add(orderProduct);
-            
-            //add a 3rd purhase order line record
-            orderProduct = new ESDRecordOrderPurchaseLine();
-            orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
-            orderProduct.productCode = "PINKDOU";
-            orderProduct.productName = "Blue tea towel - 30 x 6 centimetres";
-            orderProduct.quantity = 2;
-            orderProduct.salesOrderProductCode = "ACME-SUPPLIER-TTBLUE"; 
-            orderLines.add(orderProduct);
+			orderProduct = new ESDRecordOrderPurchaseLine();
+			orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_TEXT;
+			orderProduct.productCode = "TEA-TOWEL-BLUE";
+			orderProduct.textDescription = "Please bundle tea towels into a box";
+			orderLines.add(orderProduct);
+			
+			//add a 3rd purhase order line record
+			orderProduct = new ESDRecordOrderPurchaseLine();
+			orderProduct.lineType = ESDocumentConstants.ORDER_LINE_TYPE_PRODUCT;
+			orderProduct.productCode = "PINKDOU";
+			orderProduct.productName = "Blue tea towel - 30 x 6 centimetres";
+			orderProduct.quantity = 2;
+			orderProduct.salesOrderProductCode = "ACME-SUPPLIER-TTBLUE"; 
+			orderLines.add(orderProduct);
 			
 			//add order lines to the order
 			purchaseOrderRecord.lines = orderLines;
@@ -2038,26 +2040,26 @@ public class ExampleRunner
 					}
 				}
 				//if one or more products in the purchase order did not have stock available by the supplier organisation then find the order line that caused the problem
-                else if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_MAPPED_PRODUCT_STOCK_NOT_AVAILABLE) && esDocumentOrderSale != null)
-                {
-                    if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNSTOCKED_LINES))
-                    {
-                        //get a list of order lines that could not be stocked
-                        ArrayList<Pair<Integer, Integer>> unstockedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnstockedOrderLines(esDocumentOrderSale);
+				else if(endpointResponseESD.result_code.equals(APIv1EndpointResponse.ENDPOINT_RESULT_CODE_ERROR_ORDER_MAPPED_PRODUCT_STOCK_NOT_AVAILABLE) && esDocumentOrderSale != null)
+				{
+					if(esDocumentOrderSale.configs.containsKey(APIv1EndpointResponseESD.ESD_CONFIG_ORDERS_WITH_UNSTOCKED_LINES))
+					{
+						//get a list of order lines that could not be stocked
+						ArrayList<Pair<Integer, Integer>> unstockedLines = APIv1EndpointOrgProcurePurchaseOrderFromSupplier.getUnstockedOrderLines(esDocumentOrderSale);
 
-                        //iterate through each unstocked order line
-                        for(Pair<Integer, Integer> unstockedLine : unstockedLines){
-                            //get the index of the purchase order and line that contained the unstocked product
-                            int orderIndex = unstockedLine.getKey();
-                            int lineIndex = unstockedLine.getValue();
+						//iterate through each unstocked order line
+						for(Pair<Integer, Integer> unstockedLine : unstockedLines){
+							//get the index of the purchase order and line that contained the unstocked product
+							int orderIndex = unstockedLine.getKey();
+							int lineIndex = unstockedLine.getValue();
 
-                            //check that the order can be found that contains the problematic line
-                            if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
-                                System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has no stock available for line number: " + (lineIndex+1));
-                            }
-                        }
-                    }
-                }
+							//check that the order can be found that contains the problematic line
+							if(orderIndex < orderPurchaseESD.dataRecords.length && lineIndex < orderPurchaseESD.dataRecords[orderIndex].lines.size()){
+								System.out.println("For purchase order: "+ orderPurchaseESD.dataRecords[orderIndex].purchaseOrderCode + " the supplier has no stock available for line number: " + (lineIndex+1));
+							}
+						}
+					}
+				}
 			}
 		}
 		
